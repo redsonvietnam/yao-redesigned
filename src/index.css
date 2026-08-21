@@ -118,6 +118,9 @@ body {
   .chrome-row:hover {
     background: rgba(255, 255, 255, 0.04);
   }
+  .chrome-row:focus-visible {
+    @apply outline-none ring-2 ring-[var(--chrome-accent)]/50 ring-offset-1 ring-offset-[var(--chrome-surface)];
+  }
 }
 
 .no-scrollbar::-webkit-scrollbar {

@@ -187,9 +187,18 @@ export const HeaderBar: React.FC<HeaderBarProps> = ({
                   savedDocs.map((doc) => (
                     <div
                       key={doc.id}
+                      role="button"
+                      tabIndex={0}
                       onClick={() => {
                         loadDocument(doc.id, doc.title, doc.cells);
                         setShowDocMenu(false);
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault();
+                          loadDocument(doc.id, doc.title, doc.cells);
+                          setShowDocMenu(false);
+                        }
                       }}
                       className={`chrome-row w-full flex items-center justify-between ${
                         doc.id === docId ? 'bg-[var(--chrome-accent-dim)] text-[var(--chrome-text)]' : 'text-[var(--chrome-text-muted)]'
