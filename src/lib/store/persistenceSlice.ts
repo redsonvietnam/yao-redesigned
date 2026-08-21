@@ -84,9 +84,13 @@ export const createPersistenceSlice: StateCreator<
 
   deleteDocument: async (docId) => {
     try {
+      const exists = await db.documents.get(docId);
+      if (!exists) {
+        set({ persistenceError: `Tài liệu không tồn tại hoặc đã bị xoá.` });
+        return;
+      }
       await db.documents.delete(docId);
       const { docId: currentDocId, newDocument } = get();
-      // If the deleted document was the active one, reset to a new document
       if (currentDocId === docId) {
         newDocument();
       }
