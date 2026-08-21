@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useAppStore } from '../lib/store';
 import { dictEngine, TELEX_RULES, transform, stripDiacritics } from '../lib/imeEngine';
 import { db } from '../lib/db';
+import { performOcr } from '../lib/ocrService';
 import {
   BookOpen,
   Keyboard,
@@ -33,8 +34,11 @@ export const SidePanel: React.FC = () => {
 
   const [testInput, setTestInput] = useState('shoo shee maw faw');
 
-  const [ocrText, setOcrText] = useState('盤王天地山水');
+  const [ocrText, setOcrText] = useState('');
   const [isScanning, setIsScanning] = useState(false);
+  const [ocrError, setOcrError] = useState<string | null>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   if (!showSidePanel) return null;
 
@@ -76,9 +80,41 @@ export const SidePanel: React.FC = () => {
 
   const lookupResults = activeLookupChar ? dictEngine.reverseLookup(activeLookupChar) : [];
 
-  const handleSimulateOCR = () => {
+  const handleSimulateOCR = async () => {
+    if (!selectedFile) return;
     setIsScanning(true);
-    setTimeout(() => setIsScanning(false), 1200);
+    setOcrError(null);
+    try {
+      const result = await performOcr(selectedFile);
+      setOcrText(result.text);
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+      setOcrError(message);
+      setOcrText('');
+    } finally {
+      setIsScanning(false);
+    }
+  };
+
+  const handleFileSelect = (file: File) => {
+    setSelectedFile(file);
+    setOcrError(null);
+    setOcrText('');
+  };
+
+  const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) handleFileSelect(file);
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    const file = e.dataTransfer.files[0];
+    if (file) handleFileSelect(file);
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
   };
 
   const handleInsertOCRText = () => {
@@ -354,18 +390,46 @@ export const SidePanel: React.FC = () => {
               </p>
             </div>
 
-            <div className="border border-dashed border-white/10 rounded-xl p-5 text-center bg-black/15 space-y-2.5 hover:border-[#b23a2e]/50 transition-colors">
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+              onChange={handleFileInputChange}
+              className="hidden"
+            />
+
+            <div
+              onDrop={handleDrop}
+              onDragOver={handleDragOver}
+              onClick={() => fileInputRef.current?.click()}
+              className="border border-dashed border-white/10 rounded-xl p-5 text-center bg-black/15 space-y-2.5 hover:border-[#b23a2e]/50 transition-colors cursor-pointer"
+            >
               <Camera className="w-8 h-8 text-[#8a7c5c] mx-auto" />
-              <div className="text-xs font-semibold text-[#f2e7d0]">Tải ảnh bản thảo chữ Dao</div>
-              <div className="text-[10px] text-[#6b6252]">Hỗ trợ JPG, PNG, WEBP (tối đa 10MB)</div>
+              {selectedFile ? (
+                <div className="text-xs font-semibold text-[#f2e7d0]">{selectedFile.name}</div>
+              ) : (
+                <>
+                  <div className="text-xs font-semibold text-[#f2e7d0]">Tải ảnh bản thảo chữ Dao</div>
+                  <div className="text-[10px] text-[#6b6252]">Kéo thả hoặc bấm để chọn ảnh (JPG, PNG, WEBP, tối đa 10MB)</div>
+                </>
+              )}
               <button
-                onClick={handleSimulateOCR}
-                disabled={isScanning}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleSimulateOCR();
+                }}
+                disabled={isScanning || !selectedFile}
                 className="mt-1 px-4 py-1.5 bg-[#4f6a52] hover:bg-[#3d5440] text-white rounded-lg text-xs font-semibold cursor-pointer transition-colors disabled:opacity-60"
               >
-                {isScanning ? 'Đang nhận dạng...' : 'Chạy thử Scanner OCR'}
+                {isScanning ? 'Đang nhận dạng...' : 'Chạy Scanner OCR'}
               </button>
             </div>
+
+            {ocrError && (
+              <div className="chrome-panel bg-[#14100c] p-3 text-xs text-[#b23a2e] border border-[#b23a2e]/30 rounded-lg">
+                {ocrError}
+              </div>
+            )}
 
             <div className="chrome-panel bg-[#14100c] p-3 space-y-2">
               <div className="text-xs font-semibold text-[#f2e7d0]">Kết quả nhận dạng</div>
@@ -373,11 +437,13 @@ export const SidePanel: React.FC = () => {
                 value={ocrText}
                 onChange={(e) => setOcrText(e.target.value)}
                 rows={3}
+                placeholder="Kết quả OCR sẽ hiển thị ở đây..."
                 className="chrome-field w-full p-2.5 text-base font-['Noto_Serif_SC']"
               />
               <button
                 onClick={handleInsertOCRText}
-                className="w-full py-2 bg-[#b23a2e] hover:bg-[#8f2e24] text-white rounded-lg text-xs font-semibold cursor-pointer transition-colors"
+                disabled={!ocrText.trim()}
+                className="w-full py-2 bg-[#b23a2e] hover:bg-[#8f2e24] text-white rounded-lg text-xs font-semibold cursor-pointer transition-colors disabled:opacity-60"
               >
                 Chèn toàn bộ vào trang giấy
               </button>
