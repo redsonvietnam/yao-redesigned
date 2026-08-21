@@ -13,6 +13,7 @@ import {
   SlidersHorizontal,
   BookOpen,
   PanelLeft,
+  Pencil,
   Sparkles,
   Layout,
   Eye,
@@ -147,10 +148,11 @@ export const HeaderBar: React.FC<HeaderBarProps> = ({
         ) : (
           <button
             onClick={() => setIsEditingTitle(true)}
-            className="text-[13px] font-semibold text-[var(--chrome-text)] hover:text-white truncate max-w-[140px] md:max-w-[200px] cursor-pointer"
+            className="text-[13px] font-semibold text-[var(--chrome-text)] hover:text-white truncate max-w-[140px] md:max-w-[200px] cursor-pointer flex items-center gap-1 group/title"
             title="Đổi tên bản thảo"
           >
-            {docTitle}
+            <span className="truncate">{docTitle}</span>
+            <Pencil className="w-3 h-3 opacity-0 group-hover/title:opacity-60 transition-opacity shrink-0" />
           </button>
         )}
 
@@ -185,26 +187,22 @@ export const HeaderBar: React.FC<HeaderBarProps> = ({
                   savedDocs.map((doc) => (
                     <div
                       key={doc.id}
-                      className={`chrome-row w-full flex items-center ${
+                      onClick={() => {
+                        loadDocument(doc.id, doc.title, doc.cells);
+                        setShowDocMenu(false);
+                      }}
+                      className={`chrome-row w-full flex items-center justify-between ${
                         doc.id === docId ? 'bg-[var(--chrome-accent-dim)] text-[var(--chrome-text)]' : 'text-[var(--chrome-text-muted)]'
                       }`}
                     >
-                      <button
-                        onClick={() => {
-                          loadDocument(doc.id, doc.title, doc.cells);
-                          setShowDocMenu(false);
-                        }}
-                        className="flex-1 text-left truncate text-xs"
-                      >
-                        <span className="truncate">{doc.title}</span>
-                      </button>
-                      <span className="text-[10px] text-[var(--chrome-text-muted)] font-mono shrink-0 mr-1">{doc.cells?.length || 0} cells</span>
+                      <span className="truncate text-xs flex-1 select-none">{doc.title}</span>
+                      <span className="text-[10px] text-[var(--chrome-text-muted)] font-mono shrink-0 mr-1 select-none">{doc.cells?.length || 0} cells</span>
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
                           deleteDocument(doc.id);
                         }}
-                        className="p-1 hover:bg-[var(--chrome-danger)]/20 rounded transition-colors cursor-pointer"
+                        className="p-1 hover:bg-[var(--chrome-danger)]/20 rounded transition-colors cursor-pointer shrink-0"
                         title="Xoá bản thảo"
                       >
                         <Trash2 className="w-3 h-3 text-[var(--chrome-text-muted)] hover:text-[var(--chrome-danger)]" />
@@ -239,7 +237,7 @@ export const HeaderBar: React.FC<HeaderBarProps> = ({
 
       {/* Ribbon tabs — compact center */}
       <div className="flex items-center shrink-0">
-        <div className="chrome-group overflow-x-auto max-w-full">
+        <div className="chrome-group overflow-x-auto max-w-full no-scrollbar">
           {tabs.map((tab) => (
             <button
               key={tab.id}
@@ -256,7 +254,7 @@ export const HeaderBar: React.FC<HeaderBarProps> = ({
       <div className="chrome-divider" />
 
       {/* Context-sensitive controls based on active ribbon tab */}
-      <div className="flex-1 flex items-center gap-1.5 min-w-0 overflow-x-auto">
+      <div className="flex-1 flex items-center gap-1.5 min-w-0 overflow-x-auto no-scrollbar">
 
         {/* HOME tab controls */}
         {ribbonTab === 'home' && (

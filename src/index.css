@@ -39,7 +39,7 @@ body {
 }
 
 /* ============================================================
-   Chrome layer — modern editorial / digital writing studio
+   Chrome layer ï¿½ modern editorial / digital writing studio
    ============================================================ */
 @layer components {
   .chrome-group {
@@ -48,7 +48,7 @@ body {
   }
 
   .chrome-seg {
-    @apply px-2 py-1 rounded-md text-[11px] font-medium transition-colors cursor-pointer whitespace-nowrap;
+    @apply px-2 py-1 rounded-md text-[11px] font-medium transition-all duration-150 cursor-pointer whitespace-nowrap active:scale-[0.97];
     color: var(--chrome-text-muted);
   }
   .chrome-seg:hover {
@@ -57,11 +57,14 @@ body {
   .chrome-seg.is-active {
     background: var(--chrome-accent);
     color: #0B0F14;
-    @apply shadow-sm;
+    @apply shadow-sm font-semibold;
+  }
+  .chrome-seg:focus-visible {
+    @apply outline-none ring-2 ring-[var(--chrome-accent)]/50 ring-offset-1 ring-offset-[var(--chrome-surface)];
   }
 
   .icon-btn {
-    @apply p-1.5 rounded-lg transition-colors cursor-pointer;
+    @apply p-1.5 rounded-lg transition-all duration-150 cursor-pointer active:scale-[0.95];
     color: var(--chrome-text-muted);
   }
   .icon-btn:hover {
@@ -75,9 +78,12 @@ body {
     color: var(--chrome-accent);
     background: var(--chrome-accent-dim);
   }
+  .icon-btn:focus-visible {
+    @apply outline-none ring-2 ring-[var(--chrome-accent)]/50 ring-offset-1 ring-offset-[var(--chrome-surface)];
+  }
 
   .chrome-field {
-    @apply rounded-lg transition-colors;
+    @apply rounded-lg transition-all duration-150;
     background: rgba(0, 0, 0, 0.3);
     border: 1px solid var(--chrome-border);
     color: var(--chrome-text);
@@ -87,8 +93,7 @@ body {
     opacity: 0.6;
   }
   .chrome-field:focus {
-    outline: none;
-    border-color: var(--chrome-accent);
+    @apply outline-none ring-2 ring-[var(--chrome-accent)]/40 border-[var(--chrome-accent)];
   }
 
   .eyebrow {
@@ -104,15 +109,23 @@ body {
   .chrome-panel {
     background: var(--chrome-surface);
     border: 1px solid var(--chrome-border);
-    @apply rounded-xl;
+    @apply rounded-xl shadow-lg;
   }
 
   .chrome-row {
-    @apply flex items-center gap-2.5 px-2.5 py-2 rounded-lg transition-colors cursor-pointer;
+    @apply flex items-center gap-2.5 px-2.5 py-2 rounded-lg transition-all duration-150 cursor-pointer;
   }
   .chrome-row:hover {
     background: rgba(255, 255, 255, 0.04);
   }
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 /* Custom scrollbars */

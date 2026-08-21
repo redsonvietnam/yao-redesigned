@@ -55,7 +55,7 @@ export default function App() {
       />
 
       {/* Main Workspace Stage */}
-      <main className="flex-1 flex flex-col lg:flex-row min-h-0 overflow-hidden p-2 sm:p-3 gap-3 w-full max-w-[1920px] mx-auto">
+      <main className="flex-1 flex flex-col lg:flex-row min-h-0 overflow-hidden p-1.5 sm:p-2 gap-2 w-full max-w-[1920px] mx-auto">
         {/* Paper Canvas Grid Area with Word Ruler */}
         <PaperArea />
 

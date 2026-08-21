@@ -221,7 +221,7 @@ export const SidePanel: React.FC = () => {
               />
             </div>
 
-            <div className="flex gap-1 overflow-x-auto pb-0.5 -mx-0.5 px-0.5">
+            <div className="flex gap-1 overflow-x-auto pb-0.5 -mx-0.5 px-0.5 no-scrollbar">
               {categories.map((cat) => (
                 <button
                   key={cat}
@@ -284,7 +284,7 @@ export const SidePanel: React.FC = () => {
                     <th className="p-2.5 font-medium">Ví dụ</th>
                   </tr>
                 </thead>
-                <tbody style={{ borderColor: 'var(--chrome-border)' }} className="divide-y text-[var(--chrome-text-muted)]">
+                <tbody style={{ borderColor: 'var(--chrome-border)' }} className="divide-y divide-[var(--chrome-border)] text-[var(--chrome-text-muted)]">
                   {TELEX_RULES.map((r, i) => (
                     <tr key={i} className="hover:bg-white/[0.03] transition-colors">
                       <td className="p-2.5 font-mono text-[var(--chrome-text)] font-semibold">{r.from}</td>

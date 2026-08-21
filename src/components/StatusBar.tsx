@@ -38,13 +38,13 @@ export const StatusBar: React.FC = () => {
           Trang {currentPage}/{pageCount}
         </span>
 
-        <span style={{ color: 'var(--chrome-border)' }}>·</span>
+        <span className="text-[var(--chrome-text-muted)] opacity-30 select-none">·</span>
 
         <span>
           <b className="text-[var(--chrome-text)]">{cells.length}</b> chữ ({Math.round((cells.length / cap) * 100)}%)
         </span>
 
-        <span style={{ color: 'var(--chrome-border)' }} className="hidden sm:inline">·</span>
+        <span className="text-[var(--chrome-text-muted)] opacity-30 select-none hidden sm:inline">·</span>
 
         <span className="hidden sm:inline-flex items-center gap-1 text-[var(--chrome-success)] font-medium">
           <Keyboard className="w-3 h-3" /> {inputMode === 'han' ? 'Hán Telex' : 'Latin'}
