@@ -1,0 +1,97 @@
+import React from 'react';
+import { useAppStore } from '../lib/store';
+import { FileText, ZoomIn, ZoomOut, PanelLeft, Keyboard, Layers } from 'lucide-react';
+
+export const StatusBar: React.FC = () => {
+  const {
+    cells,
+    cursor,
+    mode,
+    textFlow,
+    inputMode,
+    gridDensity,
+    showSidePanel,
+    toggleSidePanel,
+    cellSize,
+    setCellSize,
+  } = useAppStore();
+
+  const getCapacity = () => {
+    switch (gridDensity) {
+      case 'standard': return 80;
+      case 'dense': return 120;
+      case 'high': return 180;
+      case 'ultra': return 320;
+      default: return 120;
+    }
+  };
+
+  const cap = getCapacity();
+  const pageCount = Math.max(1, Math.ceil((cells.length + 1) / cap));
+  const currentPage = Math.max(1, Math.ceil((cursor + 1) / cap));
+
+  const handleZoomWheel = (e: React.WheelEvent) => {
+    e.preventDefault();
+    const delta = e.deltaY < 0 ? 2 : -2;
+    setCellSize(Math.min(72, Math.max(22, cellSize + delta)));
+  };
+
+  return (
+    <footer className="no-print w-full bg-[#120e0b] h-7 px-3 md:px-4 flex items-center justify-between text-[11px] text-[#8f8266] select-none shrink-0 z-30 font-mono">
+      <div className="flex items-center gap-2.5">
+        <span className="flex items-center gap-1 text-[#cdb996] font-medium">
+          <FileText className="w-3 h-3 text-[#8a7c5c]" />
+          Trang {currentPage}/{pageCount}
+        </span>
+
+        <span className="text-[#4a4438]">·</span>
+
+        <span>
+          <b className="text-[#e8dcc0]">{cells.length}</b> chữ ({Math.round((cells.length / cap) * 100)}%)
+        </span>
+
+        <span className="text-[#4a4438] hidden sm:inline">·</span>
+
+        <span className="hidden sm:inline-flex items-center gap-1 text-[#4f6a52] font-medium">
+          <Keyboard className="w-3 h-3" /> {inputMode === 'han' ? 'Bộ gõ Hán Telex' : 'La-tinh'}
+        </span>
+
+        <span className="hidden md:inline-flex items-center gap-1 text-[#8a7c5c]">
+          <Layers className="w-3 h-3" /> {mode === 'vertical' ? 'Dọc' : 'Ngang'} · {textFlow === 'top-to-bottom-rtl' ? 'Cổ Phong' : 'Hiện Đại'}
+        </span>
+      </div>
+
+      <div className="flex items-center gap-2.5">
+        <div
+          onWheel={handleZoomWheel}
+          className="flex items-center gap-1 bg-black/25 px-2 py-0.5 rounded-md"
+          title="Lăn chuột hoặc dùng slider để điều chỉnh cỡ ô"
+        >
+          <button onClick={() => setCellSize(Math.max(22, cellSize - 3))} className="text-[#8f8266] hover:text-[#e8dcc0] cursor-pointer">
+            <ZoomOut className="w-3 h-3" />
+          </button>
+          <input
+            type="range"
+            min="22"
+            max="72"
+            value={cellSize}
+            onChange={(e) => setCellSize(parseInt(e.target.value, 10))}
+            className="w-14 h-1 accent-[#b23a2e] cursor-pointer"
+          />
+          <span className="text-[#e8dcc0] w-8 text-center">{cellSize}px</span>
+          <button onClick={() => setCellSize(Math.min(72, cellSize + 3))} className="text-[#8f8266] hover:text-[#e8dcc0] cursor-pointer">
+            <ZoomIn className="w-3 h-3" />
+          </button>
+        </div>
+
+        <button
+          onClick={toggleSidePanel}
+          className={`flex items-center gap-1 cursor-pointer transition-colors ${showSidePanel ? 'text-[#4f6a52]' : 'text-[#8f8266] hover:text-[#e8dcc0]'}`}
+          title="Bật/Tắt bảng tra cứu & từ điển"
+        >
+          <PanelLeft className="w-3.5 h-3.5" />
+        </button>
+      </div>
+    </footer>
+  );
+};

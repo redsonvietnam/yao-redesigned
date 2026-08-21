@@ -1,0 +1,6 @@
+{
+  "name": "Chữ Dao — Bút Ký",
+  "description": "Web app soạn thảo văn bản chữ Hán bằng phiên âm tiếng Dao với lưới ô, IME Telex, từ điển tra cứu và các công cụ hỗ trợ.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

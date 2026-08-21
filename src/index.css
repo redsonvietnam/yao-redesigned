@@ -1,0 +1,383 @@
+@import "tailwindcss";
+
+:root {
+  --ink-950: #15120e;
+  --charcoal-800: #211c17;
+  --charcoal-700: #2b241d;
+  --paper-100: #f2e7d0;
+  --paper-200: #e3d2a6;
+  --cinnabar-500: #b23a2e;
+  --cinnabar-600: #8f2e24;
+  --bamboo-600: #4f6a52;
+  --brass-400: #a68a5b;
+  --text-soft: #cdb996;
+  --text-faint: #8f8266;
+  --cell: 52px;
+  --glyph: 32px;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background:
+    radial-gradient(circle at 15% -10%, rgba(178,58,46,0.12), transparent 45%),
+    radial-gradient(circle at 100% 110%, rgba(79,106,82,0.14), transparent 50%),
+    var(--ink-950);
+  color: var(--text-soft);
+  font-family: 'Inter', sans-serif;
+  min-height: 100vh;
+}
+
+/* ============================================================
+   Chrome layer — the UI framing the paper (header, ribbon, side
+   panel, status bar, modals). Kept quiet & neutral on purpose so
+   the paper area stays the visual focus. One radius scale, one
+   spacing rhythm, borders replaced by subtle fills where possible.
+   ============================================================ */
+@layer components {
+  /* Groups of related controls: dark recessed well, no border noise */
+  .chrome-group {
+    @apply flex items-center gap-0.5 bg-black/25 rounded-lg p-0.5;
+  }
+
+  /* A single choice inside a segmented .chrome-group */
+  .chrome-seg {
+    @apply px-2.5 py-1 rounded-md text-[11px] font-medium text-[#8f8266] hover:text-[#e8dcc0] transition-colors cursor-pointer whitespace-nowrap;
+  }
+  .chrome-seg.is-active {
+    @apply bg-[#b23a2e] text-white shadow-sm;
+  }
+
+  /* Standalone icon button */
+  .icon-btn {
+    @apply p-1.5 rounded-lg text-[#8f8266] hover:text-[#e8dcc0] hover:bg-white/[0.06] transition-colors cursor-pointer disabled:opacity-30 disabled:pointer-events-none;
+  }
+  .icon-btn.is-active {
+    @apply text-[#4f6a52] bg-[#4f6a52]/15;
+  }
+
+  /* Text inputs / selects */
+  .chrome-field {
+    @apply bg-black/25 border border-white/[0.06] rounded-lg text-[#f2e7d0] placeholder-[#6b6252] focus:outline-none focus:border-[#b23a2e]/60 transition-colors;
+  }
+
+  /* Tiny section label, used sparingly */
+  .eyebrow {
+    @apply text-[10px] font-semibold text-[#8a7c5c] uppercase tracking-wide;
+  }
+
+  /* Hairline divider between chrome sections */
+  .chrome-divider {
+    @apply w-px h-5 bg-white/[0.08] shrink-0;
+  }
+
+  /* Panels (side panel, dropdowns, cards inside chrome) */
+  .chrome-panel {
+    @apply bg-[#181410] border border-white/[0.06] rounded-xl;
+  }
+
+  /* Row inside a list (dictionary entries, saved docs, etc.) */
+  .chrome-row {
+    @apply flex items-center gap-2.5 px-2.5 py-2 rounded-lg hover:bg-white/[0.05] transition-colors cursor-pointer;
+  }
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(21, 18, 14, 0.8);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(166, 138, 91, 0.3);
+  border-radius: 9999px;
+  border: 1px solid rgba(166, 138, 91, 0.2);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(178, 58, 46, 0.6);
+}
+
+/* Luxury Studio Glass & Seal Utilities */
+.glass-studio {
+  background: rgba(28, 23, 18, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(166, 138, 91, 0.22);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.glass-studio-card {
+  background: linear-gradient(145deg, rgba(33, 28, 23, 0.85), rgba(21, 18, 14, 0.95));
+  border: 1px solid rgba(166, 138, 91, 0.2);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.glass-studio-card:hover {
+  border-color: rgba(178, 58, 46, 0.5);
+  box-shadow: 0 8px 24px rgba(178, 58, 46, 0.15), inset 0 0 12px rgba(166, 138, 91, 0.1);
+  transform: translateY(-1px);
+}
+
+.gold-glow {
+  box-shadow: 0 0 20px rgba(166, 138, 91, 0.25);
+}
+
+.cinnabar-glow {
+  box-shadow: 0 0 24px rgba(178, 58, 46, 0.35);
+}
+
+/* Calligraphy Desk Mat Texture */
+.desk-mat {
+  background-color: #120e0b;
+  background-image: 
+    radial-gradient(ellipse at 50% 0%, rgba(178, 58, 46, 0.15), transparent 70%),
+    radial-gradient(ellipse at 80% 100%, rgba(79, 106, 82, 0.15), transparent 70%),
+    radial-gradient(circle at 10% 90%, rgba(166, 138, 91, 0.1), transparent 50%);
+  position: relative;
+}
+
+.desk-mat::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23a68a5b' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  pointer-events: none;
+  opacity: 0.8;
+}
+
+/* Page paper & cell styles preserved from demo */
+.page {
+  background: var(--paper-100);
+  border-radius: 4px;
+  box-shadow: 0 10px 28px rgba(0,0,0,0.45), inset 0 0 0 1px rgba(0,0,0,0.06);
+  padding: 10px;
+  display: grid;
+  transition: all 0.2s ease;
+}
+.page.vertical {
+  direction: rtl;
+  grid-auto-flow: column;
+  grid-auto-columns: var(--cell);
+}
+.page.horizontal {
+  direction: ltr;
+  grid-auto-flow: row;
+}
+
+/* Specific Text Flow Direction Overrides */
+.page.tf-top-to-bottom-rtl {
+  direction: rtl;
+  grid-auto-flow: column;
+  grid-auto-columns: var(--cell);
+}
+.page.tf-left-to-right-ttb {
+  direction: ltr;
+  grid-auto-flow: row;
+}
+
+.cell {
+  width: var(--cell);
+  height: var(--cell);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  direction: ltr;
+  font-family: 'Noto Serif SC', serif;
+  font-size: var(--glyph);
+  color: var(--ink-950);
+  user-select: none;
+  cursor: pointer;
+}
+.grid-on .cell {
+  border: 1px solid rgba(166,138,91,0.4);
+}
+.grid-on .cell::before, .grid-on .cell::after {
+  content: '';
+  position: absolute;
+  background: rgba(166,138,91,0.22);
+  pointer-events: none;
+}
+.grid-on .cell::before {
+  left: 50%;
+  top: 6%;
+  bottom: 6%;
+  width: 1px;
+}
+.grid-on .cell::after {
+  top: 50%;
+  left: 6%;
+  right: 6%;
+  height: 1px;
+}
+.cell.cursor {
+  box-shadow: inset 0 0 0 2px var(--cinnabar-500);
+  background: rgba(178,58,46,0.08);
+  border-radius: 2px;
+}
+.cell.selected-cell {
+  background: rgba(178, 58, 46, 0.22) !important;
+  box-shadow: inset 0 0 0 2px var(--cinnabar-500);
+}
+.cell .preedit {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: calc(var(--glyph) * 0.4);
+  color: var(--cinnabar-600);
+  border-bottom: 1px dashed var(--cinnabar-500);
+  padding-bottom: 2px;
+}
+
+/* Chop candidate popup */
+.chop {
+  position: fixed;
+  z-index: 100;
+  background: var(--cinnabar-500);
+  color: #fbe9df;
+  border-radius: 12px;
+  padding: 10px;
+  box-shadow: 0 16px 40px rgba(0,0,0,0.6);
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  max-width: 320px;
+  border: 2px solid rgba(255,255,255,0.18);
+  backdrop-filter: blur(8px);
+}
+.chop.hidden {
+  display: none;
+}
+.chop .cand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  background: rgba(0,0,0,0.18);
+  border-radius: 8px;
+  padding: 6px 8px;
+  cursor: pointer;
+  min-width: 44px;
+  transition: background 0.15s ease;
+}
+.chop .cand:hover, .chop .cand.selected {
+  background: rgba(255,255,255,0.32);
+}
+.chop .cand .num {
+  font-size: 9px;
+  opacity: 0.8;
+  font-family: 'JetBrains Mono', monospace;
+}
+.chop .cand .glyph {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 22px;
+  line-height: 1.15;
+}
+.chop .cand .gloss {
+  font-size: 8.5px;
+  opacity: 0.95;
+  max-width: 60px;
+  text-align: center;
+  line-height: 1.2;
+}
+.chop .cand .tag {
+  font-size: 7.5px;
+  opacity: 0.7;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+/* Print CSS setup */
+@media print {
+  @page {
+    size: auto;
+    margin: 10mm;
+  }
+
+  html,
+  body,
+  #root,
+  #root > div,
+  main {
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    width: 100% !important;
+    overflow: visible !important;
+    background: white !important;
+    color: black !important;
+    display: block !important;
+    position: static !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .no-print,
+  header,
+  footer,
+  aside,
+  .context-menu,
+  .chop,
+  .modal-overlay {
+    display: none !important;
+  }
+
+  /* Paper container reset for print */
+  .paper-wrap {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: visible !important;
+    height: auto !important;
+    max-height: none !important;
+    width: 100% !important;
+    display: block !important;
+  }
+
+  /* Paper scroll wrapper */
+  .paper-wrap > div {
+    overflow: visible !important;
+    height: auto !important;
+    max-height: none !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    padding: 0 !important;
+    gap: 20px !important;
+  }
+
+  .page {
+    box-shadow: none !important;
+    background: white !important;
+    color: black !important;
+    border: 1px solid #999 !important;
+    page-break-after: always;
+    break-after: page;
+    page-break-inside: avoid;
+    break-inside: avoid;
+    margin: 0 auto 20px auto !important;
+  }
+
+  .grid-on .cell {
+    border-color: #a68a5b !important;
+  }
+
+  .grid-on .cell::before,
+  .grid-on .cell::after {
+    background: rgba(166, 138, 91, 0.25) !important;
+  }
+
+  .cell {
+    color: black !important;
+    box-shadow: none !important;
+    background: transparent !important;
+  }
+
+  .cell.cursor,
+  .cell.selected-cell {
+    box-shadow: none !important;
+    background: transparent !important;
+  }
+}
+
