@@ -229,4 +229,8 @@ if (isMainModule) {
   });
 }
 
-export { requestHandler, serveStaticRes, collectBody, sendJson, handleOcrRequest, server };
+export { requestHandler, serveStaticRes, collectBody, sendJson, handleOcrRequest };
+
+// Export server instance for testing purposes
+const serverExports = { requestHandler, serveStaticRes, collectBody, sendJson, handleOcrRequest, server };
+export default serverExports;
