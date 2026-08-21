@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { HeaderBar } from './components/HeaderBar';
 import { Toolbar } from './components/Toolbar';
-import { PaperArea } from './components/PaperArea';
+import { PaperArea } from './components/paper';
 import { SidePanel } from './components/SidePanel';
 import { StatusBar } from './components/StatusBar';
 import { ExportModal } from './components/ExportModal';

@@ -1,0 +1,1 @@
+export { PaperArea } from './PaperArea';
