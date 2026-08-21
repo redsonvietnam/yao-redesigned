@@ -22,10 +22,10 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose })
 
   return (
     <div className="no-print fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-200">
-      <div className="bg-[#181410] rounded-2xl w-full max-w-sm p-5 shadow-2xl text-[#f2e7d0] space-y-4">
+      <div className="chrome-panel w-full max-w-sm p-5 shadow-2xl text-[var(--chrome-text)] space-y-4" style={{ background: 'var(--chrome-surface-elevated)' }}>
         <div className="flex items-center justify-between">
           <h2 className="text-sm font-bold flex items-center gap-2">
-            <SettingsIcon className="w-4 h-4 text-[#a68a5b]" /> Cài đặt & phím tắt
+            <SettingsIcon className="w-4 h-4 text-[var(--chrome-accent)]" /> Cài đặt & phím tắt
           </h2>
           <button onClick={onClose} className="icon-btn">
             <X className="w-4 h-4" />
@@ -36,19 +36,19 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose })
           <div className="eyebrow flex items-center gap-1.5">
             <Keyboard className="w-3.5 h-3.5" /> Phím tắt soạn thảo
           </div>
-          <div className="chrome-panel bg-black/25 divide-y divide-white/[0.05] text-xs">
+          <div className="chrome-panel divide-y text-xs" style={{ borderColor: 'var(--chrome-border)' }}>
             {shortcuts.map((s) => (
               <div key={s.action} className="flex justify-between items-center gap-3 px-3 py-2">
-                <span className="text-[#cdb996]">{s.action}</span>
-                <span className="font-mono text-[10px] text-[#e8dcc0] bg-black/40 px-1.5 py-0.5 rounded shrink-0">{s.keys}</span>
+                <span className="text-[var(--chrome-text-muted)]">{s.action}</span>
+                <span className="font-mono text-[10px] text-[var(--chrome-text)] bg-black/30 px-1.5 py-0.5 rounded shrink-0">{s.keys}</span>
               </div>
             ))}
           </div>
         </div>
 
-        <div className="flex gap-2 p-3 bg-black/25 rounded-xl text-xs">
-          <Info className="w-3.5 h-3.5 text-[#b23a2e] shrink-0 mt-0.5" />
-          <p className="text-[#8f8266] leading-relaxed">
+        <div className="flex gap-2 p-3 rounded-xl text-xs" style={{ background: 'rgba(0,0,0,0.3)', border: '1px solid var(--chrome-border)' }}>
+          <Info className="w-3.5 h-3.5 text-[var(--chrome-accent)] shrink-0 mt-0.5" />
+          <p className="text-[var(--chrome-text-muted)] leading-relaxed">
             Web app chuyên biệt dành cho việc bảo tồn và soạn thảo văn bản chữ Hán Nôm / Hán Dao bằng bộ gõ phiên âm Telex.
           </p>
         </div>
@@ -61,11 +61,11 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose })
                 onClose();
               }
             }}
-            className="text-xs text-[#c4544a] hover:text-[#e0655a] cursor-pointer flex items-center gap-1.5"
+            className="text-xs text-[var(--chrome-danger)] hover:opacity-80 cursor-pointer flex items-center gap-1.5"
           >
             <Trash2 className="w-3.5 h-3.5" /> Xoá trang
           </button>
-          <button onClick={onClose} className="px-3.5 py-1.5 bg-[#b23a2e] hover:bg-[#8f2e24] text-white text-xs rounded-lg cursor-pointer font-medium transition-colors">
+          <button onClick={onClose} className="px-3.5 py-1.5 bg-[var(--chrome-accent)] hover:opacity-90 text-[#0B0F14] text-xs rounded-lg cursor-pointer font-medium transition-colors">
             Đóng
           </button>
         </div>

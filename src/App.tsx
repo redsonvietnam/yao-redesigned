@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { HeaderBar } from './components/HeaderBar';
-import { Toolbar } from './components/Toolbar';
 import { PaperArea } from './components/paper';
 import { SidePanel } from './components/SidePanel';
 import { StatusBar } from './components/StatusBar';
@@ -48,17 +47,14 @@ export default function App() {
   }, []);
 
   return (
-    <div className="h-screen w-screen bg-[#15120e] text-[#cdb996] font-sans flex flex-col overflow-hidden select-none">
-      {/* 1. Microsoft Word Top Header Bar */}
+    <div className="h-screen w-screen font-sans flex flex-col overflow-hidden select-none" style={{ background: 'var(--chrome-bg)', color: 'var(--chrome-text)' }}>
+      {/* Unified top bar (header + toolbar merged) */}
       <HeaderBar
         onOpenExportModal={() => setIsExportOpen(true)}
         onOpenSettingsModal={() => setIsSettingsOpen(true)}
       />
 
-      {/* 2. Microsoft Word Ribbon Sub-Toolbar */}
-      <Toolbar />
-
-      {/* 3. Main Workspace Stage - Maximized Height */}
+      {/* Main Workspace Stage */}
       <main className="flex-1 flex flex-col lg:flex-row min-h-0 overflow-hidden p-2 sm:p-3 gap-3 w-full max-w-[1920px] mx-auto">
         {/* Paper Canvas Grid Area with Word Ruler */}
         <PaperArea />

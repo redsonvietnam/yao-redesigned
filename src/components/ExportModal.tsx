@@ -4,11 +4,11 @@ import { X, FileText, Printer, Check, Download } from 'lucide-react';
 
 function escapeHtml(str: string): string {
   return str
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
+    .replace(/&/g, "&")
+    .replace(/</g, "<")
+    .replace(/>/g, ">")
+    .replace(/"/g, '"')
+    .replace(/'/g, "'");
 }
 
 interface ExportModalProps {
@@ -76,17 +76,17 @@ body { background: #f2e7d0; color: #15120e; padding: 40px; font-family: sans-ser
   };
 
   const options = [
-    { onClick: handleExportHTML, icon: FileText, accent: '#b23a2e', title: 'Trang Web Bản thảo (.HTML)', desc: 'Giữ nguyên lưới ô, nét chữ và phông Noto Serif SC' },
-    { onClick: handleExportText, icon: FileText, accent: '#a68a5b', title: 'Văn bản thuần (.TXT)', desc: 'Tệp UTF-8 tương thích mọi thiết bị' },
-    { onClick: handlePrint, icon: Printer, accent: '#4f6a52', title: 'In ấn hoặc lưu PDF', desc: 'Xuất ra khổ A4/Letter hoặc lưu PDF (Ctrl+P)' },
+    { onClick: handleExportHTML, icon: FileText, accent: 'var(--chrome-accent)', title: 'Trang Web Bản thảo (.HTML)', desc: 'Giữ nguyên lưới ô, nét chữ và phông Noto Serif SC' },
+    { onClick: handleExportText, icon: FileText, accent: 'var(--brass-400)', title: 'Văn bản thuần (.TXT)', desc: 'Tệp UTF-8 tương thích mọi thiết bị' },
+    { onClick: handlePrint, icon: Printer, accent: 'var(--chrome-success)', title: 'In ấn hoặc lưu PDF', desc: 'Xuất ra khổ A4/Letter hoặc lưu PDF (Ctrl+P)' },
   ];
 
   return (
     <div className="no-print fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-200">
-      <div className="bg-[#181410] rounded-2xl w-full max-w-sm p-5 shadow-2xl text-[#f2e7d0] space-y-4">
+      <div className="chrome-panel w-full max-w-sm p-5 shadow-2xl text-[var(--chrome-text)] space-y-4" style={{ background: 'var(--chrome-surface-elevated)' }}>
         <div className="flex items-center justify-between">
           <h2 className="text-sm font-bold flex items-center gap-2">
-            <Download className="w-4 h-4 text-[#b23a2e]" /> Xuất & In bản thảo
+            <Download className="w-4 h-4 text-[var(--chrome-accent)]" /> Xuất & In bản thảo
           </h2>
           <button onClick={onClose} className="icon-btn">
             <X className="w-4 h-4" />
@@ -94,8 +94,8 @@ body { background: #f2e7d0; color: #15120e; padding: 40px; font-family: sans-ser
         </div>
 
         {exportedMsg && (
-          <div className="p-2.5 bg-[#4f6a52]/15 text-[#dff0e2] text-xs rounded-lg flex items-center gap-2">
-            <Check className="w-3.5 h-3.5 text-[#4f6a52] shrink-0" /> {exportedMsg}
+          <div className="p-2.5 text-[11px] text-[var(--chrome-success)] rounded-lg flex items-center gap-2" style={{ background: 'var(--chrome-success-dim)' }}>
+            <Check className="w-3.5 h-3.5 text-[var(--chrome-success)] shrink-0" /> {exportedMsg}
           </div>
         )}
 
@@ -104,7 +104,7 @@ body { background: #f2e7d0; color: #15120e; padding: 40px; font-family: sans-ser
             <button
               key={opt.title}
               onClick={opt.onClick}
-              className="w-full p-2.5 bg-black/25 hover:bg-white/[0.06] rounded-xl flex items-center gap-3 text-left transition-colors cursor-pointer"
+              className="w-full p-2.5 chrome-group hover:bg-[var(--chrome-accent-dim)] rounded-xl flex items-center gap-3 text-left transition-colors cursor-pointer"
             >
               <div
                 className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0"
@@ -114,7 +114,7 @@ body { background: #f2e7d0; color: #15120e; padding: 40px; font-family: sans-ser
               </div>
               <div className="min-w-0">
                 <div className="text-xs font-semibold">{opt.title}</div>
-                <div className="text-[10px] text-[#8f8266] truncate">{opt.desc}</div>
+                <div className="text-[10px] text-[var(--chrome-text-muted)] truncate">{opt.desc}</div>
               </div>
             </button>
           ))}

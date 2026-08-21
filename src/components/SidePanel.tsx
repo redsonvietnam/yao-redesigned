@@ -131,7 +131,7 @@ export const SidePanel: React.FC = () => {
   ];
 
   return (
-    <aside className="no-print w-full lg:w-80 bg-[#181410] rounded-xl flex flex-col shrink-0 h-full overflow-hidden">
+    <aside className="no-print w-full lg:w-80 flex flex-col shrink-0 h-full overflow-hidden" style={{ background: 'var(--chrome-surface)', borderLeft: '1px solid var(--chrome-border)' }}>
       {/* Tabs */}
       <div className="flex p-1.5 gap-1 shrink-0">
         {tabs.map(({ id, icon: Icon, label }) => (
@@ -139,7 +139,7 @@ export const SidePanel: React.FC = () => {
             key={id}
             onClick={() => setActiveTab(id)}
             className={`flex-1 py-2 rounded-lg text-[11px] font-semibold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
-              activeTab === id ? 'bg-[#b23a2e] text-white' : 'text-[#8a7c5c] hover:text-[#cdb996] hover:bg-white/[0.04]'
+              activeTab === id ? 'bg-[var(--chrome-accent)] text-[#0B0F14]' : 'text-[var(--chrome-text-muted)] hover:text-[var(--chrome-text)] hover:bg-[var(--chrome-accent-dim)]'
             }`}
           >
             <Icon className="w-3.5 h-3.5" />
@@ -148,7 +148,7 @@ export const SidePanel: React.FC = () => {
         ))}
       </div>
 
-      <div className="h-px bg-white/[0.06] shrink-0" />
+      <div className="h-px shrink-0" style={{ background: 'var(--chrome-border)' }} />
 
       <div className="flex-1 p-3.5 overflow-y-auto space-y-3">
         {/* 1. DICTIONARY */}
@@ -156,23 +156,23 @@ export const SidePanel: React.FC = () => {
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <h2 className="eyebrow flex items-center gap-1.5">
-                <BookOpen className="w-3.5 h-3.5 text-[#b23a2e]" /> Từ điển Dao — Hán
+                <BookOpen className="w-3.5 h-3.5 text-[var(--chrome-accent)]" /> Từ điển Dao — Hán
               </h2>
               <button
                 onClick={() => setShowAddModal(!showAddModal)}
-                className="text-[11px] bg-[#b23a2e] hover:bg-[#8f2e24] text-white px-2 py-1 rounded-md flex items-center gap-1 cursor-pointer font-medium"
+                className="text-[11px] bg-[var(--chrome-accent)] hover:opacity-90 text-[#0B0F14] px-2 py-1 rounded-md flex items-center gap-1 cursor-pointer font-medium"
               >
                 <Plus className="w-3 h-3" /> Thêm
               </button>
             </div>
 
             {showAddModal && (
-              <form onSubmit={handleAddWord} className="chrome-panel bg-[#14100c] p-3 space-y-2 text-xs animate-in fade-in duration-150">
-                <div className="font-semibold text-[#f2e7d0] flex items-center gap-1.5">
-                  <Bookmark className="w-3.5 h-3.5 text-[#a68a5b]" /> Thêm từ mới
+              <form onSubmit={handleAddWord} className="chrome-panel p-3 space-y-2 text-xs animate-in fade-in duration-150">
+                <div className="font-semibold text-[var(--chrome-text)] flex items-center gap-1.5">
+                  <Bookmark className="w-3.5 h-3.5 text-[var(--chrome-accent)]" /> Thêm từ mới
                 </div>
                 <div>
-                  <label className="text-[#8a7c5c] block text-[10px] mb-1">Phiên âm ASCII (vd: maw faw)</label>
+                  <label className="text-[var(--chrome-text-muted)] block text-[10px] mb-1">Phiên âm ASCII (vd: maw faw)</label>
                   <input
                     type="text"
                     value={newRaw}
@@ -183,7 +183,7 @@ export const SidePanel: React.FC = () => {
                   />
                 </div>
                 <div>
-                  <label className="text-[#8a7c5c] block text-[10px] mb-1">Chữ Hán tương ứng</label>
+                  <label className="text-[var(--chrome-text-muted)] block text-[10px] mb-1">Chữ Hán tương ứng</label>
                   <input
                     type="text"
                     value={newHanzi}
@@ -194,7 +194,7 @@ export const SidePanel: React.FC = () => {
                   />
                 </div>
                 <div>
-                  <label className="text-[#8a7c5c] block text-[10px] mb-1">Ý nghĩa tiếng Việt</label>
+                  <label className="text-[var(--chrome-text-muted)] block text-[10px] mb-1">Ý nghĩa tiếng Việt</label>
                   <input
                     type="text"
                     value={newMeaning}
@@ -204,14 +204,14 @@ export const SidePanel: React.FC = () => {
                   />
                 </div>
                 <div className="flex gap-2 pt-1">
-                  <button type="submit" className="flex-1 bg-[#4f6a52] hover:bg-[#3d5440] text-white py-1.5 rounded-lg cursor-pointer font-semibold transition-colors">Lưu từ</button>
-                  <button type="button" onClick={() => setShowAddModal(false)} className="px-3 text-[#8a7c5c] hover:text-[#cdb996] cursor-pointer">Hủy</button>
+                  <button type="submit" className="flex-1 bg-[var(--chrome-success)] hover:opacity-90 text-[#0B0F14] py-1.5 rounded-lg cursor-pointer font-semibold transition-colors">Lưu từ</button>
+                  <button type="button" onClick={() => setShowAddModal(false)} className="px-3 text-[var(--chrome-text-muted)] hover:text-[var(--chrome-text)] cursor-pointer">Hủy</button>
                 </div>
               </form>
             )}
 
             <div className="relative">
-              <Search className="w-3.5 h-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-[#6b6252]" />
+              <Search className="w-3.5 h-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-[var(--chrome-text-muted)]" />
               <input
                 type="text"
                 value={dictQuery}
@@ -227,7 +227,7 @@ export const SidePanel: React.FC = () => {
                   key={cat}
                   onClick={() => setSelectedCategory(cat)}
                   className={`px-2.5 py-1 rounded-full shrink-0 cursor-pointer text-[10px] font-medium transition-all ${
-                    selectedCategory === cat ? 'bg-[#a68a5b] text-[#15120e] font-semibold' : 'bg-black/25 text-[#8a7c5c] hover:text-[#cdb996]'
+                    selectedCategory === cat ? 'bg-[var(--brass-400)] text-[#15120e] font-semibold' : 'bg-black/25 text-[var(--chrome-text-muted)] hover:text-[var(--chrome-text)]'
                   }`}
                 >
                   {cat}
@@ -237,7 +237,7 @@ export const SidePanel: React.FC = () => {
 
             <div className="space-y-0.5 max-h-[430px] overflow-y-auto -mx-1 px-1">
               {filteredDictEntries.length === 0 ? (
-                <div className="text-center py-8 text-[#6b6252] text-xs">Không tìm thấy từ khớp</div>
+                <div className="text-center py-8 text-[var(--chrome-text-muted)] text-xs">Không tìm thấy từ khớp</div>
               ) : (
                 filteredDictEntries.map((entry, idx) => (
                   <div
@@ -246,16 +246,16 @@ export const SidePanel: React.FC = () => {
                     className="chrome-row group"
                     title="Bấm để chèn chữ này vào văn bản"
                   >
-                    <div className="w-8 h-8 rounded-lg bg-black/30 flex items-center justify-center font-['Noto_Serif_SC'] text-lg text-[#f2e7d0] shrink-0 group-hover:text-[#b23a2e] transition-colors">
+                    <div className="w-8 h-8 rounded-lg bg-black/30 flex items-center justify-center font-['Noto_Serif_SC'] text-lg text-[var(--chrome-text)] shrink-0 group-hover:text-[var(--chrome-accent)] transition-colors">
                       {entry.hanzi}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <div className="font-mono text-[11px] text-[#a68a5b] truncate">
-                        {entry.raw} <span className="text-[#5f5747]">→</span> <span className="text-[#e8dcc0]">{entry.key}</span>
+                      <div className="font-mono text-[11px] text-[var(--brass-400)] truncate">
+                        {entry.raw} <span style={{ color: 'var(--chrome-text-muted)' }}>→</span> <span className="text-[var(--chrome-text)]">{entry.key}</span>
                       </div>
-                      <div className="text-[11px] text-[#8f8266] truncate">{entry.meaning}</div>
+                      <div className="text-[11px] text-[var(--chrome-text-muted)] truncate">{entry.meaning}</div>
                     </div>
-                    <span className="text-[9px] text-[#6b6252] shrink-0">{entry.category || 'Chung'}</span>
+                    <span className="text-[9px] text-[var(--chrome-text-muted)] shrink-0">{entry.category || 'Chung'}</span>
                   </div>
                 ))
               )}
@@ -268,28 +268,28 @@ export const SidePanel: React.FC = () => {
           <div className="space-y-3">
             <div>
               <h2 className="eyebrow flex items-center gap-1.5 mb-1">
-                <Keyboard className="w-3.5 h-3.5 text-[#b23a2e]" /> Quy tắc ghép Telex
+                <Keyboard className="w-3.5 h-3.5 text-[var(--chrome-accent)]" /> Quy tắc ghép Telex
               </h2>
-              <p className="text-[11px] text-[#8f8266]">
+              <p className="text-[11px] text-[var(--chrome-text-muted)]">
                 Gõ nguyên âm lặp hoặc phím 'w' để tự động tạo nguyên âm ghép tiếng Dao.
               </p>
             </div>
 
-            <div className="chrome-panel bg-[#14100c] overflow-hidden">
+            <div className="chrome-panel overflow-hidden">
               <table className="w-full text-left text-xs">
-                <thead className="text-[#8a7c5c] text-[10px] uppercase tracking-wide">
+                <thead className="text-[var(--chrome-text-muted)] text-[10px] uppercase tracking-wide">
                   <tr>
                     <th className="p-2.5 font-medium">Gõ</th>
                     <th className="p-2.5 font-medium">Kết quả</th>
                     <th className="p-2.5 font-medium">Ví dụ</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-white/[0.05] text-[#cdb996]">
+                <tbody style={{ borderColor: 'var(--chrome-border)' }} className="divide-y text-[var(--chrome-text-muted)]">
                   {TELEX_RULES.map((r, i) => (
                     <tr key={i} className="hover:bg-white/[0.03] transition-colors">
-                      <td className="p-2.5 font-mono text-[#f2e7d0] font-semibold">{r.from}</td>
-                      <td className="p-2.5 font-bold text-[#b23a2e] text-sm">{r.to}</td>
-                      <td className="p-2.5 text-[11px] font-mono text-[#8f8266]">
+                      <td className="p-2.5 font-mono text-[var(--chrome-text)] font-semibold">{r.from}</td>
+                      <td className="p-2.5 font-bold text-[var(--chrome-accent)] text-sm">{r.to}</td>
+                      <td className="p-2.5 text-[11px] font-mono text-[var(--chrome-text-muted)]">
                         {r.from === 'aw' && 'maw → mă'}
                         {r.from === 'ow' && 'shoo → shŏ'}
                         {r.from === 'ew' && 'kew → kĕ'}
@@ -303,9 +303,9 @@ export const SidePanel: React.FC = () => {
               </table>
             </div>
 
-            <div className="chrome-panel bg-[#14100c] p-3 space-y-2">
-              <div className="text-xs font-semibold text-[#f2e7d0] flex items-center gap-1.5">
-                <Zap className="w-3.5 h-3.5 text-[#a68a5b]" /> Thử nghiệm gõ Telex
+            <div className="chrome-panel p-3 space-y-2">
+              <div className="text-xs font-semibold text-[var(--chrome-text)] flex items-center gap-1.5">
+                <Zap className="w-3.5 h-3.5 text-[var(--chrome-accent)]" /> Thử nghiệm gõ Telex
               </div>
               <input
                 type="text"
@@ -313,8 +313,8 @@ export const SidePanel: React.FC = () => {
                 onChange={(e) => setTestInput(e.target.value)}
                 className="chrome-field w-full px-2.5 py-2 font-mono"
               />
-              <div className="text-[11px] text-[#8f8266]">
-                Kết quả: <span className="font-mono text-[#b23a2e] font-bold text-sm ml-1">{transform(testInput)}</span>
+              <div className="text-[11px] text-[var(--chrome-text-muted)]">
+                Kết quả: <span className="font-mono text-[var(--chrome-accent)] font-bold text-sm ml-1">{transform(testInput)}</span>
               </div>
             </div>
           </div>
@@ -325,9 +325,9 @@ export const SidePanel: React.FC = () => {
           <div className="space-y-3">
             <div>
               <h2 className="eyebrow flex items-center gap-1.5 mb-1">
-                <Search className="w-3.5 h-3.5 text-[#b23a2e]" /> Tra cứu Hán → Dao
+                <Search className="w-3.5 h-3.5 text-[var(--chrome-accent)]" /> Tra cứu Hán → Dao
               </h2>
-              <p className="text-[11px] text-[#8f8266]">
+              <p className="text-[11px] text-[var(--chrome-text-muted)]">
                 Chọn ô chữ trên trang hoặc gõ trực tiếp chữ Hán để tra phiên âm và ngữ nghĩa.
               </p>
             </div>
@@ -341,37 +341,37 @@ export const SidePanel: React.FC = () => {
             />
 
             {activeLookupChar ? (
-              <div className="chrome-panel bg-[#14100c] p-3.5 space-y-3">
+              <div className="chrome-panel p-3.5 space-y-3">
                 <div className="flex items-center gap-3">
-                  <div className="w-14 h-14 rounded-xl bg-black/30 border border-[#b23a2e]/50 flex items-center justify-center font-['Noto_Serif_SC'] text-3xl text-[#f2e7d0]">
+                  <div className="w-14 h-14 rounded-xl bg-black/30 border flex items-center justify-center font-['Noto_Serif_SC'] text-3xl text-[var(--chrome-text)]" style={{ borderColor: 'var(--chrome-accent)' }}>
                     {activeLookupChar}
                   </div>
                   <div>
                     <div className="eyebrow">Tự dạng</div>
-                    <div className="text-lg font-bold text-[#f2e7d0] font-['Noto_Serif_SC']">{activeLookupChar}</div>
+                    <div className="text-lg font-bold text-[var(--chrome-text)] font-['Noto_Serif_SC']">{activeLookupChar}</div>
                   </div>
                 </div>
 
-                <div className="h-px bg-white/[0.06]" />
+                <div className="h-px" style={{ background: 'var(--chrome-border)' }} />
 
                 <div className="space-y-2 text-xs">
                   {lookupResults.length > 0 ? (
                     lookupResults.map((res, i) => (
-                      <div key={i} className="p-2.5 bg-black/25 rounded-lg space-y-1">
-                        <div className="font-mono text-[#b23a2e] font-bold text-sm">
-                          {res.raw} <span className="text-[#e8dcc0] font-normal">({res.key})</span>
+                      <div key={i} className="p-2.5 bg-black/25 rounded-lg space-y-1" style={{ border: '1px solid var(--chrome-border)' }}>
+                        <div className="font-mono text-[var(--chrome-accent)] font-bold text-sm">
+                          {res.raw} <span className="text-[var(--chrome-text)] font-normal">({res.key})</span>
                         </div>
-                        <div className="text-[#cdb996]">{res.meaning}</div>
-                        {res.category && <div className="text-[10px] text-[#8f8266]">{res.category}</div>}
+                        <div className="text-[var(--chrome-text-muted)]">{res.meaning}</div>
+                        {res.category && <div className="text-[10px] text-[var(--chrome-text-muted)]">{res.category}</div>}
                       </div>
                     ))
                   ) : (
-                    <div className="text-[#8f8266]">Chưa có phiên âm chuẩn hóa trong từ điển mẫu. Từ này có thể chèn trực tiếp.</div>
+                    <div className="text-[var(--chrome-text-muted)]">Chưa có phiên âm chuẩn hóa trong từ điển mẫu. Từ này có thể chèn trực tiếp.</div>
                   )}
                 </div>
               </div>
             ) : (
-              <div className="p-6 text-center text-[#6b6252] text-xs chrome-panel bg-[#14100c]">
+              <div className="p-6 text-center text-[var(--chrome-text-muted)] text-xs chrome-panel">
                 Nhấp chuột phải vào ô chữ trên trang giấy để tra cứu nhanh.
               </div>
             )}
@@ -383,9 +383,9 @@ export const SidePanel: React.FC = () => {
           <div className="space-y-3">
             <div>
               <h2 className="eyebrow flex items-center gap-1.5 mb-1">
-                <Sparkles className="w-3.5 h-3.5 text-[#b23a2e]" /> OCR quét văn bản cổ
+                <Sparkles className="w-3.5 h-3.5 text-[var(--chrome-accent)]" /> OCR quét văn bản cổ
               </h2>
-              <p className="text-[11px] text-[#8f8266]">
+              <p className="text-[11px] text-[var(--chrome-text-muted)]">
                 Quét ảnh văn bản chữ Dao cổ hoặc trích xuất ký tự tự động vào ô lưới.
               </p>
             </div>
@@ -402,15 +402,15 @@ export const SidePanel: React.FC = () => {
               onDrop={handleDrop}
               onDragOver={handleDragOver}
               onClick={() => fileInputRef.current?.click()}
-              className="border border-dashed border-white/10 rounded-xl p-5 text-center bg-black/15 space-y-2.5 hover:border-[#b23a2e]/50 transition-colors cursor-pointer"
+              className="border border-dashed rounded-xl p-5 text-center bg-black/15 space-y-2.5 hover:border-[var(--chrome-accent)]/50 transition-colors cursor-pointer" style={{ borderColor: 'var(--chrome-border)' }}
             >
-              <Camera className="w-8 h-8 text-[#8a7c5c] mx-auto" />
+              <Camera className="w-8 h-8 text-[var(--chrome-text-muted)] mx-auto" />
               {selectedFile ? (
-                <div className="text-xs font-semibold text-[#f2e7d0]">{selectedFile.name}</div>
+                <div className="text-xs font-semibold text-[var(--chrome-text)]">{selectedFile.name}</div>
               ) : (
                 <>
-                  <div className="text-xs font-semibold text-[#f2e7d0]">Tải ảnh bản thảo chữ Dao</div>
-                  <div className="text-[10px] text-[#6b6252]">Kéo thả hoặc bấm để chọn ảnh (JPG, PNG, WEBP, tối đa 10MB)</div>
+                  <div className="text-xs font-semibold text-[var(--chrome-text)]">Tải ảnh bản thảo chữ Dao</div>
+                  <div className="text-[10px] text-[var(--chrome-text-muted)]">Kéo thả hoặc bấm để chọn ảnh (JPG, PNG, WEBP, tối đa 10MB)</div>
                 </>
               )}
               <button
@@ -419,20 +419,20 @@ export const SidePanel: React.FC = () => {
                   handleSimulateOCR();
                 }}
                 disabled={isScanning || !selectedFile}
-                className="mt-1 px-4 py-1.5 bg-[#4f6a52] hover:bg-[#3d5440] text-white rounded-lg text-xs font-semibold cursor-pointer transition-colors disabled:opacity-60"
+                className="mt-1 px-4 py-1.5 bg-[var(--chrome-success)] hover:opacity-90 text-[#0B0F14] rounded-lg text-xs font-semibold cursor-pointer transition-colors disabled:opacity-60"
               >
                 {isScanning ? 'Đang nhận dạng...' : 'Chạy Scanner OCR'}
               </button>
             </div>
 
             {ocrError && (
-              <div className="chrome-panel bg-[#14100c] p-3 text-xs text-[#b23a2e] border border-[#b23a2e]/30 rounded-lg">
+              <div className="chrome-panel p-3 text-xs text-[var(--chrome-danger)]" style={{ border: '1px solid var(--chrome-danger)' }}>
                 {ocrError}
               </div>
             )}
 
-            <div className="chrome-panel bg-[#14100c] p-3 space-y-2">
-              <div className="text-xs font-semibold text-[#f2e7d0]">Kết quả nhận dạng</div>
+            <div className="chrome-panel p-3 space-y-2">
+              <div className="text-xs font-semibold text-[var(--chrome-text)]">Kết quả nhận dạng</div>
               <textarea
                 value={ocrText}
                 onChange={(e) => setOcrText(e.target.value)}
@@ -443,7 +443,7 @@ export const SidePanel: React.FC = () => {
               <button
                 onClick={handleInsertOCRText}
                 disabled={!ocrText.trim()}
-                className="w-full py-2 bg-[#b23a2e] hover:bg-[#8f2e24] text-white rounded-lg text-xs font-semibold cursor-pointer transition-colors disabled:opacity-60"
+                className="w-full py-2 bg-[var(--chrome-accent)] hover:opacity-90 text-[#0B0F14] rounded-lg text-xs font-semibold cursor-pointer transition-colors disabled:opacity-60"
               >
                 Chèn toàn bộ vào trang giấy
               </button>

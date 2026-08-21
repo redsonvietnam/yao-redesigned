@@ -98,18 +98,18 @@ export const SymbolPickerModal: React.FC = () => {
 
   return (
     <div className="no-print fixed inset-0 z-50 flex items-center justify-center p-3 bg-black/70 backdrop-blur-sm animate-in fade-in duration-200">
-      <div className="bg-[#181410] rounded-2xl shadow-2xl w-full max-w-2xl max-h-[85vh] flex flex-col overflow-hidden text-[#f2e7d0]">
+      <div className="chrome-panel rounded-2xl shadow-2xl w-full max-w-2xl max-h-[85vh] flex flex-col overflow-hidden text-[var(--chrome-text)]" style={{ background: 'var(--chrome-surface-elevated)' }}>
         {/* Header */}
-        <div className="px-4 py-3 flex items-center justify-between shrink-0">
+        <div className="px-4 py-3 flex items-center justify-between shrink-0" style={{ borderBottom: '1px solid var(--chrome-border)' }}>
           <div className="flex items-center gap-2.5 min-w-0">
-            <div className="w-8 h-8 rounded-lg bg-[#b23a2e]/20 flex items-center justify-center text-[#b23a2e] shrink-0">
+            <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" style={{ background: 'var(--chrome-accent-dim)', color: 'var(--chrome-accent)' }}>
               <Sparkles className="w-4 h-4" />
             </div>
             <div className="min-w-0">
               <h3 className="font-bold text-sm truncate">Kí Tự Đặc Biệt & Dấu Câu Cổ Truyền</h3>
-              <p className="text-[11px] text-[#8a7c5c] flex items-center gap-1.5">
+              <p className="text-[11px] text-[var(--chrome-text-muted)] flex items-center gap-1.5">
                 Nhấn để chèn.
-                <kbd className="px-1.5 py-0.5 bg-black/40 font-mono rounded text-[10px]">Ctrl+.</kbd>
+                <kbd className="px-1.5 py-0.5 font-mono rounded text-[10px]" style={{ background: 'rgba(0,0,0,0.3)', color: 'var(--chrome-text-muted)' }}>Ctrl+.</kbd>
               </p>
             </div>
           </div>
@@ -119,9 +119,9 @@ export const SymbolPickerModal: React.FC = () => {
         </div>
 
         {/* Filters */}
-        <div className="px-4 pb-3 flex flex-wrap items-center gap-2 shrink-0">
+        <div className="px-4 pb-3 flex flex-wrap items-center gap-2 shrink-0" style={{ borderBottom: '1px solid var(--chrome-border)' }}>
           <div className="relative flex-1 min-w-[180px]">
-            <Search className="w-3.5 h-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-[#6b6252]" />
+            <Search className="w-3.5 h-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-[var(--chrome-text-muted)]" />
             <input
               type="text"
               placeholder="Tìm kiếm ký hiệu, dấu câu..."
@@ -145,19 +145,17 @@ export const SymbolPickerModal: React.FC = () => {
           </div>
         </div>
 
-        <div className="h-px bg-white/[0.06] shrink-0" />
-
         {/* Grid */}
         <div className="flex-1 overflow-y-auto p-4 space-y-4">
           {filteredCategories.length === 0 ? (
-            <div className="py-12 text-center text-[#6b6252] text-xs">
+            <div className="py-12 text-center text-[var(--chrome-text-muted)] text-xs">
               Không tìm thấy kí tự phù hợp với "{searchTerm}"
             </div>
           ) : (
             filteredCategories.map((cat) => (
               <div key={cat.title} className="space-y-2">
                 <h4 className="eyebrow flex items-center gap-1.5">
-                  <span className="w-1 h-1 rounded-full bg-[#b23a2e]" />
+                  <span className="w-1 h-1 rounded-full" style={{ background: 'var(--chrome-accent)' }} />
                   {cat.title} · {cat.symbols.length}
                 </h4>
                 <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-1.5">
@@ -165,13 +163,13 @@ export const SymbolPickerModal: React.FC = () => {
                     <button
                       key={item.char + item.name}
                       onClick={() => handleInsert(item.char)}
-                      className="group flex flex-col items-center justify-center py-2 rounded-lg bg-black/20 hover:bg-[#b23a2e]/25 transition-all cursor-pointer"
+                      className="group flex flex-col items-center justify-center py-2 rounded-lg chrome-group hover:bg-[var(--chrome-accent-dim)] transition-all cursor-pointer"
                       title={`${item.char} — ${item.name}`}
                     >
-                      <span className="text-lg font-['Noto_Serif_SC'] text-[#f2e7d0] group-hover:scale-110 transition-transform">
+                      <span className="text-lg font-['Noto_Serif_SC'] text-[var(--chrome-text)] group-hover:scale-110 transition-transform">
                         {item.char}
                       </span>
-                      <span className="text-[9px] text-[#6b6252] group-hover:text-[#cdb996] truncate max-w-full px-1">
+                      <span className="text-[9px] text-[var(--chrome-text-muted)] group-hover:text-[var(--chrome-text)] truncate max-w-full px-1">
                         {item.name}
                       </span>
                     </button>
@@ -183,12 +181,12 @@ export const SymbolPickerModal: React.FC = () => {
         </div>
 
         {/* Footer */}
-        <div className="px-4 py-2.5 flex items-center justify-between text-[11px] text-[#8f8266] shrink-0 bg-black/20">
+        <div className="px-4 py-2.5 flex items-center justify-between text-[11px] text-[var(--chrome-text-muted)] shrink-0" style={{ background: 'rgba(0,0,0,0.3)', borderTop: '1px solid var(--chrome-border)' }}>
           <div className="flex items-center gap-1.5">
-            <Keyboard className="w-3.5 h-3.5 text-[#8a7c5c]" />
-            <span>Phím tắt: <strong className="text-[#e8dcc0]">Ctrl + .</strong></span>
+            <Keyboard className="w-3.5 h-3.5 text-[var(--chrome-text-muted)]" />
+            <span>Phím tắt: <strong className="text-[var(--chrome-text)]">Ctrl + .</strong></span>
           </div>
-          <button onClick={() => setShowSymbolPicker(false)} className="px-3 py-1 hover:bg-white/[0.06] text-[#cdb996] rounded-lg cursor-pointer transition-colors">
+          <button onClick={() => setShowSymbolPicker(false)} className="px-3 py-1 hover:bg-[var(--chrome-accent-dim)] text-[var(--chrome-text)] rounded-lg cursor-pointer transition-colors">
             Đóng
           </button>
         </div>
