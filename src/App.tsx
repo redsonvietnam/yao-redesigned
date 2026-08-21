@@ -38,8 +38,8 @@ export default function App() {
           });
           customMap.set(key, existing);
         }
-        const loaded = bulkLoadDictionary(INITIAL_DICT_RAW, Array.from(customMap.entries()));
-        dictEngine.reload(loaded);
+        const loaded = bulkLoadDictionary(INITIAL_DICT_RAW);
+        dictEngine.reload(loaded, Array.from(customMap.entries()));
       } catch (err) {
         console.error('Failed to load custom dictionary:', err);
       }

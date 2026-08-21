@@ -1,8 +1,18 @@
-import { DictionaryEntry, Candidate } from '../types';
-import { transform } from './imeEngine';
-
 // Canonical dictionary raw data format
+// Candidates do NOT carry raw — raw is the tuple key
 export type DictionaryRawData = Array<[string, Array<{ hanzi: string; weight: number; meaning: string; category?: string }>]>;
+
+// Persisted Dexie entry shape — has raw field
+export interface PersistedDictionaryEntry {
+  id?: number;
+  raw: string;
+  key: string;
+  hanzi: string;
+  weight: number;
+  meaning: string;
+  category?: string;
+  isCustom?: boolean;
+}
 
 // Initial dictionary data — 37 hardcoded entries
 export const INITIAL_DICT_RAW: DictionaryRawData = [
@@ -57,8 +67,19 @@ function canonicalIdentity(raw: string, hanzi: string, meaning: string): string 
   return `${raw}::${hanzi}::${meaning || ''}`;
 }
 
-// Validate a single dictionary entry
-export function validateDictionaryEntry(entry: unknown): entry is { raw: string; hanzi: string; weight: number; meaning: string; category?: string } {
+// Validate a DictionaryRawData candidate (no raw field)
+export function validateCandidate(entry: unknown): entry is { hanzi: string; weight: number; meaning: string; category?: string } {
+  if (typeof entry !== 'object' || entry === null) return false;
+  const obj = entry as Record<string, unknown>;
+  if (typeof obj.hanzi !== 'string' || obj.hanzi.trim() === '') return false;
+  if (typeof obj.meaning !== 'string') return false;
+  if (obj.weight !== undefined && typeof obj.weight !== 'number') return false;
+  if (obj.category !== undefined && typeof obj.category !== 'string') return false;
+  return true;
+}
+
+// Validate a persisted Dexie entry (has raw field)
+export function validatePersistedEntry(entry: unknown): entry is PersistedDictionaryEntry {
   if (typeof entry !== 'object' || entry === null) return false;
   const obj = entry as Record<string, unknown>;
   if (typeof obj.raw !== 'string' || obj.raw.trim() === '') return false;
@@ -69,7 +90,7 @@ export function validateDictionaryEntry(entry: unknown): entry is { raw: string;
   return true;
 }
 
-// Validate a full import payload
+// Validate a full DictionaryRawData import payload
 export function validateImportPayload(data: unknown): data is DictionaryRawData {
   if (!Array.isArray(data)) return false;
   for (const item of data) {
@@ -78,7 +99,7 @@ export function validateImportPayload(data: unknown): data is DictionaryRawData 
     if (typeof raw !== 'string' || raw.trim() === '') return false;
     if (!Array.isArray(cands)) return false;
     for (const c of cands) {
-      if (!validateDictionaryEntry(c)) return false;
+      if (!validateCandidate(c)) return false;
     }
   }
   return true;
@@ -107,40 +128,11 @@ export function deduplicateEntries(entries: DictionaryRawData): DictionaryRawDat
   return result;
 }
 
-// Bulk load dictionary with custom entry preservation
-// Returns deduplicated, deterministically ordered entries
-export function bulkLoadDictionary(
-  baseEntries: DictionaryRawData,
-  customEntries?: Array<[string, Array<{ hanzi: string; weight: number; meaning: string; raw: string; category?: string }> ]>
-): DictionaryRawData {
-  // Start with base entries
-  let loaded = [...baseEntries];
-
-  // Merge custom entries
-  if (customEntries && customEntries.length > 0) {
-    const customMap = new Map<string, Array<{ hanzi: string; weight: number; meaning: string; raw: string; category?: string }>>();
-
-    for (const [key, cands] of customEntries) {
-      const existing = customMap.get(key) || [];
-      customMap.set(key, [...cands, ...existing]);
-    }
-
-    // Append custom entries to loaded
-    for (const [key, cands] of customMap) {
-      const existingIdx = loaded.findIndex(([raw]) => transform(raw) === key);
-      if (existingIdx >= 0) {
-        // Prepend custom entries (higher priority)
-        const existing = loaded[existingIdx];
-        loaded[existingIdx] = [existing[0], [...cands, ...existing[1]]];
-      } else {
-        // New key from custom entries
-        loaded.push([cands[0].raw, cands.map(c => ({ hanzi: c.hanzi, weight: c.weight, meaning: c.meaning, category: c.category }))]);
-      }
-    }
-  }
-
-  // Deduplicate across entire dataset
-  return deduplicateEntries(loaded);
+// Bulk load dictionary — deterministic deduplication only
+// Custom entry merging is handled by the caller (imeEngine/App)
+// to avoid circular dependency with imeEngine.ts
+export function bulkLoadDictionary(baseEntries: DictionaryRawData): DictionaryRawData {
+  return deduplicateEntries(baseEntries);
 }
 
 // Export dictionary as JSON
