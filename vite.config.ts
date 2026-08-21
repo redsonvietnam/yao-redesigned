@@ -6,7 +6,7 @@ import { geminiProxyPlugin } from './src/vite-plugin-gemini-proxy';
 
 export default defineConfig(() => {
   return {
-    plugins: [react(), tailwindcss(), geminiProxyPlugin()],
+    plugins: [react(), tailwindcss(), geminiProxyPlugin()], // gemini-proxy: dev-server only, not bundled into client
     resolve: {
       alias: {
         '@': path.resolve(__dirname, '.'),

@@ -10,6 +10,7 @@ export interface OcrError {
 const OCR_ENDPOINT = '/api/gemini/ocr';
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
+const FETCH_TIMEOUT_MS = 60_000;
 
 function fileToBase64(file: File): Promise<{ base64: string; mimeType: string }> {
   return new Promise((resolve, reject) => {
@@ -32,19 +33,45 @@ function fileToBase64(file: File): Promise<{ base64: string; mimeType: string }>
   });
 }
 
+function isRecord(v: unknown): v is Record<string, unknown> {
+  return typeof v === 'object' && v !== null && !Array.isArray(v);
+}
+
 export async function performOcr(file: File): Promise<OcrResult> {
   const { base64, mimeType } = await fileToBase64(file);
 
-  const res = await fetch(OCR_ENDPOINT, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ imageBase64: base64, mimeType }),
-  });
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
 
-  const data = await res.json();
+  let res: Response;
+  try {
+    res = await fetch(OCR_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ imageBase64: base64, mimeType }),
+      signal: controller.signal,
+    });
+  } catch (err: unknown) {
+    if (err instanceof Error && err.name === 'AbortError') {
+      throw new Error(`OCR request timed out after ${FETCH_TIMEOUT_MS / 1000} seconds. The image may be too large or the server is unreachable.`);
+    }
+    throw new Error(err instanceof Error ? err.message : 'Network error. Check your connection and try again.');
+  } finally {
+    clearTimeout(timeoutId);
+  }
+
+  let data: unknown;
+  try {
+    data = await res.json();
+  } catch {
+    throw new Error('Invalid response from server.');
+  }
 
   if (!res.ok) {
-    const errData = data as OcrError;
+    if (!isRecord(data)) {
+      throw new Error(`Request failed with status ${res.status}`);
+    }
+    const errData = data as unknown as OcrError;
     if (errData.error === 'missing_api_key') {
       throw new Error(errData.message);
     }
@@ -54,9 +81,15 @@ export async function performOcr(file: File): Promise<OcrResult> {
     if (errData.error === 'invalid_request') {
       throw new Error(errData.message);
     }
+    if (errData.error === 'timeout') {
+      throw new Error(errData.message);
+    }
     throw new Error(errData.message || `Request failed with status ${res.status}`);
   }
 
-  const result = data as OcrResult;
-  return { text: result.text ?? '' };
+  if (!isRecord(data)) {
+    return { text: '' };
+  }
+  const text = typeof data.text === 'string' ? data.text : '';
+  return { text: text.trim() };
 }
