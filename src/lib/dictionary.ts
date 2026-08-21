@@ -73,7 +73,7 @@ export function validateCandidate(entry: unknown): entry is { hanzi: string; wei
   const obj = entry as Record<string, unknown>;
   if (typeof obj.hanzi !== 'string' || obj.hanzi.trim() === '') return false;
   if (typeof obj.meaning !== 'string') return false;
-  if (obj.weight !== undefined && typeof obj.weight !== 'number') return false;
+  if (typeof obj.weight !== 'number' || !Number.isFinite(obj.weight)) return false;
   if (obj.category !== undefined && typeof obj.category !== 'string') return false;
   return true;
 }
@@ -85,7 +85,7 @@ export function validatePersistedEntry(entry: unknown): entry is PersistedDictio
   if (typeof obj.raw !== 'string' || obj.raw.trim() === '') return false;
   if (typeof obj.hanzi !== 'string' || obj.hanzi.trim() === '') return false;
   if (typeof obj.meaning !== 'string') return false;
-  if (obj.weight !== undefined && typeof obj.weight !== 'number') return false;
+  if (typeof obj.weight !== 'number' || !Number.isFinite(obj.weight)) return false;
   if (obj.category !== undefined && typeof obj.category !== 'string') return false;
   return true;
 }
