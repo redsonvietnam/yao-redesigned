@@ -7,6 +7,7 @@ export interface UISlice extends UIState {
   setShowSymbolPicker: (show: boolean) => void;
   toggleSymbolPicker: () => void;
   setSaveError: (error: string | null) => void;
+  setPersistenceError: (error: string | null) => void;
 }
 
 export const createUISlice: StateCreator<
@@ -20,6 +21,7 @@ export const createUISlice: StateCreator<
   activeLookupChar: null,
   showSymbolPicker: false,
   saveError: null,
+  persistenceError: null,
 
   setActiveTab: (activeTab) => set({ activeTab }),
 
@@ -30,4 +32,5 @@ export const createUISlice: StateCreator<
   setShowSymbolPicker: (showSymbolPicker) => set({ showSymbolPicker }),
   toggleSymbolPicker: () => set((state) => ({ showSymbolPicker: !state.showSymbolPicker })),
   setSaveError: (saveError) => set({ saveError }),
+  setPersistenceError: (persistenceError) => set({ persistenceError }),
 });

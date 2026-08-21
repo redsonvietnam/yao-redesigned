@@ -17,6 +17,7 @@ export const StatusBar: React.FC = () => {
     cellSize,
     setCellSize,
     saveError,
+    persistenceError,
   } = useAppStore();
 
   const cap = getGridCapacity(gridDensity, mode);
@@ -56,6 +57,12 @@ export const StatusBar: React.FC = () => {
         {saveError && (
           <span className="text-[#b23a2e] font-medium" title={saveError}>
             ⚠ Lưu lỗi
+          </span>
+        )}
+
+        {persistenceError && (
+          <span className="text-[#b23a2e] font-medium" title={persistenceError}>
+            ⚠ {persistenceError}
           </span>
         )}
       </div>

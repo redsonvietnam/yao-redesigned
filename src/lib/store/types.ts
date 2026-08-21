@@ -48,4 +48,5 @@ export interface UIState {
   activeLookupChar: string | null;
   showSymbolPicker: boolean;
   saveError: string | null;
+  persistenceError: string | null;
 }

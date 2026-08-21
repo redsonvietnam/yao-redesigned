@@ -16,6 +16,7 @@ import {
   Layout,
   Eye,
   Type,
+  Trash2,
 } from 'lucide-react';
 import { RibbonTab } from '../types';
 
@@ -43,6 +44,8 @@ export const HeaderBar: React.FC<HeaderBarProps> = ({
     saveCurrentDocument,
     loadDocument,
     newDocument,
+    deleteDocument,
+    persistenceError,
   } = useAppStore();
 
   const [isEditingTitle, setIsEditingTitle] = useState(false);
@@ -135,19 +138,33 @@ export const HeaderBar: React.FC<HeaderBarProps> = ({
               <div className="max-h-52 overflow-y-auto space-y-0.5">
                 {savedDocs && savedDocs.length > 0 ? (
                   savedDocs.map((doc) => (
-                    <button
+                    <div
                       key={doc.id}
-                      onClick={() => {
-                        loadDocument(doc.id, doc.title, doc.cells);
-                        setShowDocMenu(false);
-                      }}
-                      className={`chrome-row w-full text-left ${
+                      className={`chrome-row w-full flex items-center ${
                         doc.id === docId ? 'bg-[#b23a2e]/15 text-[#f2e7d0]' : 'text-[#cdb996]'
                       }`}
                     >
-                      <span className="truncate flex-1 text-xs">{doc.title}</span>
-                      <span className="text-[10px] text-[#8f8266] font-mono shrink-0">{doc.cells?.length || 0} ô</span>
-                    </button>
+                      <button
+                        onClick={() => {
+                          loadDocument(doc.id, doc.title, doc.cells);
+                          setShowDocMenu(false);
+                        }}
+                        className="flex-1 text-left truncate text-xs"
+                      >
+                        <span className="truncate">{doc.title}</span>
+                      </button>
+                      <span className="text-[10px] text-[#8f8266] font-mono shrink-0 mr-1">{doc.cells?.length || 0} ô</span>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          deleteDocument(doc.id);
+                        }}
+                        className="p-1 hover:bg-[#b23a2e]/30 rounded transition-colors cursor-pointer"
+                        title="Xoá bản thảo"
+                      >
+                        <Trash2 className="w-3 h-3 text-[#8f8266] hover:text-[#b23a2e]" />
+                      </button>
+                    </div>
                   ))
                 ) : (
                   <div className="text-[11px] text-[#8f8266] py-4 text-center">Chưa có bản thảo</div>
