@@ -1,6 +1,8 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { useAppStore } from '../lib/store';
 import { transform } from '../lib/imeEngine';
+import { getGridDimensions } from '../lib/grid';
+import { COLOR_OPTIONS, FONT_OPTIONS, MIN_ZOOM, MAX_ZOOM, ZOOM_STEP } from '../lib/constants';
 import {
   Copy,
   Scissors,
@@ -75,25 +77,6 @@ export const PaperArea: React.FC = () => {
     char: string;
   } | null>(null);
 
-  // High-quality, standard Chinese CJK calligraphic and serif fonts
-  const fontOptions = [
-    { label: 'Tống Thể (Chữ In Cổ)', value: 'Noto Serif SC' },
-    { label: 'Thư Pháp Mã Sơn', value: 'Ma Shan Zheng' },
-    { label: 'Bút Tháp Cương Bút', value: 'Zhi Mang Xing' },
-    { label: 'Hành Thư Long Cang', value: 'Long Cang' },
-    { label: 'Thảo Thư Liễu Kiến', value: 'Liu Jian Mao Cao' },
-    { label: 'Hắc Thể (Nét Đều Rõ)', value: 'Noto Sans SC' },
-  ];
-
-  const colorOptions = [
-    { label: 'Thâm Mực (Đen)', hex: '#15120e' },
-    { label: 'Chu Thần (Đỏ)', hex: '#b23a2e' },
-    { label: 'Trúc Lục (Xanh)', hex: '#4f6a52' },
-    { label: 'Kim Đồng (Vàng)', hex: '#a68a5b' },
-    { label: 'Chàm Thẫm (Lam)', hex: '#23324d' },
-    { label: 'Tử Cấm (Tím)', hex: '#58325a' },
-  ];
-
   // Focus hidden input on click
   const handlePaperClick = (e: React.MouseEvent) => {
     if ((e.target as HTMLElement).closest('.context-menu')) return;
@@ -118,29 +101,14 @@ export const PaperArea: React.FC = () => {
   const handlePaperWheel = (e: React.WheelEvent) => {
     if (e.ctrlKey || e.metaKey) {
       e.preventDefault();
-      const delta = e.deltaY < 0 ? 2 : -2;
-      const newSize = Math.min(110, Math.max(20, cellSize + delta));
+      const delta = e.deltaY < 0 ? ZOOM_STEP : -ZOOM_STEP;
+      const newSize = Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, cellSize + delta));
       setCellSize(newSize);
     }
   };
 
   // Determine Grid Dimensions based on density & orientation
-  const getGridDims = (density: GridDensity, layoutMode: LayoutMode) => {
-    switch (density) {
-      case 'standard':
-        return layoutMode === 'vertical' ? { ROWS: 10, COLS: 8 } : { ROWS: 8, COLS: 10 };
-      case 'dense':
-        return layoutMode === 'vertical' ? { ROWS: 12, COLS: 10 } : { ROWS: 10, COLS: 12 };
-      case 'high':
-        return layoutMode === 'vertical' ? { ROWS: 15, COLS: 12 } : { ROWS: 12, COLS: 15 };
-      case 'ultra':
-        return layoutMode === 'vertical' ? { ROWS: 20, COLS: 16 } : { ROWS: 16, COLS: 20 };
-      default:
-        return layoutMode === 'vertical' ? { ROWS: 12, COLS: 10 } : { ROWS: 10, COLS: 12 };
-    }
-  };
-
-  const dims = getGridDims(gridDensity, mode);
+  const dims = getGridDimensions(gridDensity, mode);
   const CAP = dims.ROWS * dims.COLS;
   const totalSlots = Math.max(cells.length, cursor) + 1;
   const pageCount = Math.max(1, Math.ceil(totalSlots / CAP));
@@ -523,7 +491,7 @@ export const PaperArea: React.FC = () => {
             </button>
             <div className="w-px h-4 bg-[#a68a5b]/30" />
             <div className="flex items-center gap-1">
-              {colorOptions.slice(0, 4).map((c) => (
+              {COLOR_OPTIONS.slice(0, 4).map((c) => (
                 <button
                   key={c.hex}
                   onClick={() => {
@@ -545,7 +513,7 @@ export const PaperArea: React.FC = () => {
               Chọn Font Chữ Hán/Dao:
             </span>
             <div className="grid grid-cols-2 gap-1">
-              {fontOptions.map((f) => (
+              {FONT_OPTIONS.map((f) => (
                 <button
                   key={f.value}
                   onClick={() => {

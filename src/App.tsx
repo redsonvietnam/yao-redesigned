@@ -9,7 +9,7 @@ import { SettingsModal } from './components/SettingsModal';
 import { SymbolPickerModal } from './components/SymbolPickerModal';
 import { useAppStore } from './lib/store';
 import { db } from './lib/db';
-import { dictEngine } from './lib/imeEngine';
+import { dictEngine, INITIAL_DICT_RAW, transform } from './lib/imeEngine';
 
 export default function App() {
   const [isExportOpen, setIsExportOpen] = useState(false);
@@ -20,9 +20,22 @@ export default function App() {
     const loadCustomDict = async () => {
       try {
         const customEntries = await db.customDict.toArray();
-        customEntries.forEach((e) => {
-          dictEngine.addEntry(e.raw, e.hanzi, e.meaning, e.category || 'Tùy chỉnh', e.weight || 90);
-        });
+        if (customEntries.length > 0) {
+          const customMap = new Map<string, Array<{ hanzi: string; weight: number; meaning: string; raw: string; category?: string }>>();
+          for (const e of customEntries) {
+            const key = transform(e.raw);
+            const existing = customMap.get(key) || [];
+            existing.push({
+              hanzi: e.hanzi,
+              weight: e.weight || 90,
+              meaning: e.meaning || 'Tùy chỉnh',
+              raw: e.raw,
+              category: e.category || 'Tùy chỉnh',
+            });
+            customMap.set(key, existing);
+          }
+          dictEngine.reload(INITIAL_DICT_RAW, Array.from(customMap.entries()));
+        }
       } catch (err) {
         console.error('Failed to load custom dictionary:', err);
       }

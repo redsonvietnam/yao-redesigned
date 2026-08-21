@@ -1,5 +1,6 @@
 import React from 'react';
 import { useAppStore } from '../lib/store';
+import { COLOR_OPTIONS, FONT_OPTIONS, GRID_DENSITIES, MIN_ZOOM, MAX_ZOOM } from '../lib/constants';
 import {
   Bold,
   Italic,
@@ -16,7 +17,6 @@ import {
   Camera,
   Stamp,
 } from 'lucide-react';
-import { GridDensity } from '../types';
 
 export const Toolbar: React.FC = () => {
   const {
@@ -52,24 +52,8 @@ export const Toolbar: React.FC = () => {
     setShowSymbolPicker,
   } = useAppStore();
 
-  const colors = [
-    { label: 'Thâm Mực', hex: '#15120e' },
-    { label: 'Chu Thần', hex: '#b23a2e' },
-    { label: 'Trúc Lục', hex: '#4f6a52' },
-    { label: 'Kim Đồng', hex: '#a68a5b' },
-    { label: 'Chàm Thẫm', hex: '#23324d' },
-    { label: 'Tử Cấm', hex: '#58325a' },
-  ];
-
   const daoSymbols = ['，', '。', '、', '；', '：', '「', '」', '『', '』', '〇', '※', '✦'];
   const sealStamps = ['印', '稿', '章', '壽', '福', '吉'];
-
-  const densities: { id: GridDensity; label: string; size: number }[] = [
-    { id: 'standard', label: 'Tiêu chuẩn', size: 48 },
-    { id: 'dense', label: 'Dày', size: 42 },
-    { id: 'high', label: 'Cao', size: 36 },
-    { id: 'ultra', label: 'Tối đa', size: 30 },
-  ];
 
   return (
     <div className="no-print w-full bg-[#211c17] px-3 md:px-4 py-1.5 flex flex-wrap items-center gap-2 text-xs min-h-11 shadow-[0_1px_0_rgba(255,255,255,0.05)]">
@@ -126,7 +110,7 @@ export const Toolbar: React.FC = () => {
 
           <div className="flex items-center gap-1 bg-black/25 px-2 py-1 rounded-lg">
             <Palette className="w-3.5 h-3.5 text-[#8a7c5c]" />
-            {colors.map((c) => (
+            {COLOR_OPTIONS.map((c) => (
               <button
                 key={c.hex}
                 onClick={() => setSelectedColor(c.hex)}
@@ -143,8 +127,8 @@ export const Toolbar: React.FC = () => {
             <ZoomIn className="w-3.5 h-3.5 text-[#8a7c5c]" />
             <input
               type="range"
-              min="24"
-              max="110"
+              min={MIN_ZOOM}
+              max={MAX_ZOOM}
               value={cellSize}
               onChange={(e) => setCellSize(parseInt(e.target.value, 10))}
               className="w-16 h-1 accent-[#b23a2e] cursor-pointer"
@@ -236,7 +220,7 @@ export const Toolbar: React.FC = () => {
           <div className="flex items-center gap-2">
             <span className="eyebrow flex items-center gap-1"><Layers className="w-3 h-3 text-[#b23a2e]" /> Mật độ</span>
             <div className="chrome-group">
-              {densities.map((d) => (
+              {GRID_DENSITIES.map((d) => (
                 <button
                   key={d.id}
                   onClick={() => {

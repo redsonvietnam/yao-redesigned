@@ -94,11 +94,20 @@ export class DaoDictionaryEngine {
     this.reload(INITIAL_DICT_RAW);
   }
 
-  public reload(entries: Array<[string, Array<{ hanzi: string; weight: number; meaning: string; category?: string }>]>) {
+  public reload(
+    entries: Array<[string, Array<{ hanzi: string; weight: number; meaning: string; category?: string }>]>,
+    customEntries?: Array<[string, Array<{ hanzi: string; weight: number; meaning: string; raw: string; category?: string }>]>,
+  ) {
     this.map.clear();
     for (const [raw, cands] of entries) {
       const key = transform(raw);
       this.map.set(key, cands.map((c) => ({ ...c, raw })));
+    }
+    if (customEntries) {
+      for (const [key, cands] of customEntries) {
+        const existing = this.map.get(key) || [];
+        this.map.set(key, [...cands, ...existing]);
+      }
     }
   }
 

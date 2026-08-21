@@ -2,6 +2,15 @@ import React, { useState } from 'react';
 import { useAppStore } from '../lib/store';
 import { X, FileText, Printer, Check, Download } from 'lucide-react';
 
+function escapeHtml(str: string): string {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 interface ExportModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -31,7 +40,7 @@ export const ExportModal: React.FC<ExportModalProps> = ({ isOpen, onClose }) => 
     const charsHtml = cells
       .map(
         (c) =>
-          `<div style="width:52px;height:52px;border:1px solid #a68a5b;display:flex;align-items:center;justify-content:center;font-size:32px;font-family:'Noto Serif SC',serif;">${c.char}</div>`
+          `<div style="width:52px;height:52px;border:1px solid #a68a5b;display:flex;align-items:center;justify-content:center;font-size:32px;font-family:'Noto Serif SC',serif;">${escapeHtml(c.char)}</div>`
       )
       .join('');
 
@@ -39,14 +48,14 @@ export const ExportModal: React.FC<ExportModalProps> = ({ isOpen, onClose }) => 
 <html>
 <head>
 <meta charset="utf-8">
-<title>${docTitle}</title>
+<title>${escapeHtml(docTitle)}</title>
 <style>
 body { background: #f2e7d0; color: #15120e; padding: 40px; font-family: sans-serif; }
 .grid { display: flex; flex-wrap: wrap; gap: 4px; max-width: 600px; }
 </style>
 </head>
 <body>
-<h1>${docTitle}</h1>
+<h1>${escapeHtml(docTitle)}</h1>
 <div class="grid">${charsHtml}</div>
 </body>
 </html>`;

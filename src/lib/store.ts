@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { CellData, LayoutMode, TextFlow, InputMode, Candidate, GridDensity, RibbonTab } from '../types';
 import { dictEngine, transform } from './imeEngine';
 import { db } from './db';
+import { MAX_HISTORY_ENTRIES } from './constants';
 
 const INITIAL_SAMPLE_CELLS: CellData[] = [
   { id: '1', char: '盤' },
@@ -61,6 +62,7 @@ interface AppState {
   activeTab: 'rules' | 'dict' | 'lookup' | 'ocr' | 'settings';
   activeLookupChar: string | null;
   showSymbolPicker: boolean;
+  saveError: string | null;
 
   // Actions
   setDocTitle: (title: string) => void;
@@ -111,6 +113,7 @@ interface AppState {
   setLookupChar: (char: string | null) => void;
   setShowSymbolPicker: (show: boolean) => void;
   toggleSymbolPicker: () => void;
+  setSaveError: (error: string | null) => void;
 
   loadDocument: (docId: string, title: string, cells: CellData[]) => void;
   newDocument: () => void;
@@ -154,9 +157,11 @@ export const useAppStore = create<AppState>((set, get) => ({
   activeTab: 'dict',
   activeLookupChar: null,
   showSymbolPicker: false,
+  saveError: null,
 
   setShowSymbolPicker: (showSymbolPicker) => set({ showSymbolPicker }),
   toggleSymbolPicker: () => set((state) => ({ showSymbolPicker: !state.showSymbolPicker })),
+  setSaveError: (saveError) => set({ saveError }),
 
   setDocTitle: (docTitle) => set({ docTitle }),
   setMode: (mode) => set({ mode }),
@@ -211,7 +216,7 @@ export const useAppStore = create<AppState>((set, get) => ({
 
     const newCells = [...cells];
     const newCell: CellData = {
-      id: Math.random().toString(36).substring(2, 9),
+      id: crypto.randomUUID(),
       char: cand.hanzi,
       bold: isBold,
       italic: isItalic,
@@ -236,7 +241,7 @@ export const useAppStore = create<AppState>((set, get) => ({
     const { cursor, cells, pushHistory, isBold, isItalic, isUnderline, selectedColor } = get();
     const newCells = [...cells];
     const newCell: CellData = {
-      id: Math.random().toString(36).substring(2, 9),
+      id: crypto.randomUUID(),
       char,
       bold: isBold,
       italic: isItalic,
@@ -415,7 +420,7 @@ export const useAppStore = create<AppState>((set, get) => ({
     const chars = Array.from(text); // Correctly handles Unicode / Chinese surrogate pairs
 
     const newCellsToInsert: CellData[] = chars.map((ch) => ({
-      id: Math.random().toString(36).substring(2, 9),
+      id: crypto.randomUUID(),
       char: ch,
       bold: isBold,
       italic: isItalic,
@@ -435,7 +440,13 @@ export const useAppStore = create<AppState>((set, get) => ({
     const { history, historyIdx } = get();
     const sliced = history.slice(0, historyIdx + 1);
     const updated = [...sliced, newCells];
-    set({ history: updated, historyIdx: updated.length - 1 });
+    // Cap history to prevent unbounded memory growth
+    if (updated.length > MAX_HISTORY_ENTRIES) {
+      const pruned = updated.slice(updated.length - MAX_HISTORY_ENTRIES);
+      set({ history: pruned, historyIdx: pruned.length - 1 });
+    } else {
+      set({ history: updated, historyIdx: updated.length - 1 });
+    }
   },
 
   undo: () => {
@@ -504,14 +515,21 @@ export const useAppStore = create<AppState>((set, get) => ({
 
   saveCurrentDocument: async () => {
     const { docId, docTitle, cells, mode, showGrid, cellSize } = get();
-    await db.documents.put({
-      id: docId,
-      title: docTitle,
-      cells,
-      mode,
-      showGrid,
-      cellSize,
-      updatedAt: Date.now(),
-    });
+    try {
+      await db.documents.put({
+        id: docId,
+        title: docTitle,
+        cells,
+        mode,
+        showGrid,
+        cellSize,
+        updatedAt: Date.now(),
+      });
+      set({ saveError: null });
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+      console.error('Failed to save document:', err);
+      set({ saveError: `Lưu thất bại: ${message}` });
+    }
   },
 }));
