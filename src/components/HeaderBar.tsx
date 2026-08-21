@@ -260,7 +260,7 @@ export const HeaderBar: React.FC<HeaderBarProps> = ({
 
         {/* HOME tab controls */}
         {ribbonTab === 'home' && (
-          <div className="flex items-center gap-1.5 flex-wrap">
+          <div className="flex items-center gap-1.5 flex-nowrap min-w-0 overflow-x-auto pb-1 no-scrollbar">
             <div className="chrome-group">
               <button onClick={() => setMode('vertical')} className={`chrome-seg ${mode === 'vertical' ? 'is-active' : ''}`} title="Dọc">Dọc</button>
               <button onClick={() => setMode('horizontal')} className={`chrome-seg ${mode === 'horizontal' ? 'is-active' : ''}`} title="Ngang">Ngang</button>
@@ -350,7 +350,7 @@ export const HeaderBar: React.FC<HeaderBarProps> = ({
 
         {/* INSERT tab controls */}
         {ribbonTab === 'insert' && (
-          <div className="flex items-center gap-3 flex-wrap">
+          <div className="flex items-center gap-3 flex-nowrap min-w-0 overflow-x-auto pb-1 no-scrollbar">
             <button
               onClick={() => setShowSymbolPicker(true)}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[var(--chrome-accent-dim)] hover:bg-[var(--chrome-accent)] text-[var(--chrome-text)] hover:text-[#0B0F14] transition-all cursor-pointer font-medium"
@@ -400,7 +400,7 @@ export const HeaderBar: React.FC<HeaderBarProps> = ({
 
         {/* LAYOUT tab controls */}
         {ribbonTab === 'layout' && (
-          <div className="flex items-center gap-3 flex-wrap">
+          <div className="flex items-center gap-3 flex-nowrap min-w-0 overflow-x-auto pb-1 no-scrollbar">
             <div className="flex items-center gap-2">
               <span className="eyebrow">Orientation</span>
               <div className="chrome-group">
@@ -448,7 +448,7 @@ export const HeaderBar: React.FC<HeaderBarProps> = ({
 
         {/* TOOLS tab controls */}
         {ribbonTab === 'tools' && (
-          <div className="flex items-center gap-1.5 flex-wrap">
+          <div className="flex items-center gap-1.5 flex-nowrap min-w-0 overflow-x-auto pb-1 no-scrollbar">
             {[
               { tab: 'dict' as const, icon: BookOpen, label: 'Từ điển' },
               { tab: 'rules' as const, icon: Keyboard, label: 'Telex' },
@@ -468,7 +468,7 @@ export const HeaderBar: React.FC<HeaderBarProps> = ({
 
         {/* VIEW tab controls */}
         {ribbonTab === 'view' && (
-          <div className="flex items-center gap-2 flex-wrap">
+          <div className="flex items-center gap-2 flex-nowrap min-w-0 overflow-x-auto pb-1 no-scrollbar">
             <button
               onClick={() => setShowRuler(!showRuler)}
               className={`icon-btn !p-1.5 flex items-center gap-1.5 !rounded-lg ${showRuler ? 'is-active' : ''}`}
