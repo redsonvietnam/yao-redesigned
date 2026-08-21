@@ -9,7 +9,8 @@ import { SettingsModal } from './components/SettingsModal';
 import { SymbolPickerModal } from './components/SymbolPickerModal';
 import { useAppStore } from './lib/store';
 import { db } from './lib/db';
-import { dictEngine, INITIAL_DICT_RAW, transform } from './lib/imeEngine';
+import { dictEngine, transform } from './lib/imeEngine';
+import { INITIAL_DICT_RAW, bulkLoadDictionary } from './lib/dictionary';
 
 export default function App() {
   const [isExportOpen, setIsExportOpen] = useState(false);
@@ -37,7 +38,8 @@ export default function App() {
           });
           customMap.set(key, existing);
         }
-        dictEngine.reload(INITIAL_DICT_RAW, Array.from(customMap.entries()));
+        const loaded = bulkLoadDictionary(INITIAL_DICT_RAW, Array.from(customMap.entries()));
+        dictEngine.reload(loaded);
       } catch (err) {
         console.error('Failed to load custom dictionary:', err);
       }
