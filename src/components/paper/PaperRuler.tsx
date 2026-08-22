@@ -18,7 +18,7 @@ export const PaperRuler: React.FC<PaperRulerProps> = ({ rows, cols }) => {
         </div>
       </div>
       {/* Vertical Ruler along left */}
-      <div className="flex flex-col justify-between mr-1 text-[9px] font-mono text-[#a68a5b]/70 select-none border-r border-[#a68a5b]/30 pr-0.5 py-1">
+      <div className="flex flex-col justify-between text-[9px] font-mono text-[#a68a5b]/70 select-none border-r border-[#a68a5b]/30 pr-0.5 py-1">
         {Array.from({ length: rows }).map((_, r) => (
           <span key={r} className="h-4 text-center leading-4">{r + 1}</span>
         ))}
