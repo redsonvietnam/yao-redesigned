@@ -17,6 +17,7 @@ describe('viewSlice', () => {
       ribbonTab: 'home',
       zoomLevel: 100,
       paperTheme: 'classic',
+      ribbonRow2Expanded: true,
     });
   });
 
@@ -133,6 +134,16 @@ describe('viewSlice', () => {
     it('updates paper theme', () => {
       useAppStore.getState().setPaperTheme('dark');
       expect(useAppStore.getState().paperTheme).toBe('dark');
+    });
+  });
+
+  describe('toggleRibbonRow2', () => {
+    it('toggles ribbon row 2 expanded state', () => {
+      expect(useAppStore.getState().ribbonRow2Expanded).toBe(true);
+      useAppStore.getState().toggleRibbonRow2();
+      expect(useAppStore.getState().ribbonRow2Expanded).toBe(false);
+      useAppStore.getState().toggleRibbonRow2();
+      expect(useAppStore.getState().ribbonRow2Expanded).toBe(true);
     });
   });
 });

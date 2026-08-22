@@ -17,6 +17,7 @@ export interface ViewSlice extends ViewState {
   setRibbonTab: (tab: RibbonTab) => void;
   setZoomLevel: (zoom: number) => void;
   setPaperTheme: (theme: 'classic' | 'white' | 'dark') => void;
+  toggleRibbonRow2: () => void;
 }
 
 export const createViewSlice: StateCreator<
@@ -39,6 +40,7 @@ export const createViewSlice: StateCreator<
   ribbonTab: 'home',
   zoomLevel: 100,
   paperTheme: 'classic',
+  ribbonRow2Expanded: true,
 
   setDocTitle: (docTitle) => set({ docTitle }),
   setMode: (mode) => set({ mode }),
@@ -60,4 +62,5 @@ export const createViewSlice: StateCreator<
   setRibbonTab: (ribbonTab) => set({ ribbonTab }),
   setZoomLevel: (zoomLevel) => set({ zoomLevel }),
   setPaperTheme: (paperTheme) => set({ paperTheme }),
+  toggleRibbonRow2: () => set((state) => ({ ribbonRow2Expanded: !state.ribbonRow2Expanded })),
 });

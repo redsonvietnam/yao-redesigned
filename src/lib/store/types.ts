@@ -28,6 +28,7 @@ export interface ViewState {
   ribbonTab: RibbonTab;
   zoomLevel: number;
   paperTheme: 'classic' | 'white' | 'dark';
+  ribbonRow2Expanded: boolean;
 }
 
 export interface FormattingState {

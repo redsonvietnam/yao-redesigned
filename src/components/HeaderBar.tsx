@@ -31,6 +31,8 @@ import {
   Camera,
   Stamp,
   PanelLeft,
+  ChevronUp,
+  ChevronDown,
 } from 'lucide-react';
 import { RibbonTab } from '../types';
 
@@ -87,6 +89,8 @@ export const HeaderBar: React.FC<HeaderBarProps> = ({
     setShowRuler,
     paperTheme,
     setPaperTheme,
+    ribbonRow2Expanded,
+    toggleRibbonRow2,
     setActiveTab,
     setShowSymbolPicker,
   } = useAppStore();
@@ -522,11 +526,11 @@ export const HeaderBar: React.FC<HeaderBarProps> = ({
 
   return (
     <header
-      className="h-11 w-full flex flex-col px-3 md:px-4 gap-1 sticky top-0 z-40 shrink-0"
+      className="w-full flex flex-col px-3 md:px-4 sticky top-0 z-40 shrink-0"
       style={{ background: 'var(--chrome-surface)', borderBottom: '1px solid var(--chrome-border)' }}
     >
       {/* Row 1: App identity + document controls + ribbon tabs + right actions */}
-      <div className="flex items-center gap-2 overflow-x-auto no-scrollbar shrink-0">
+      <div className="flex items-center gap-2 overflow-x-auto no-scrollbar shrink-0 h-11">
         {row1Left}
         {row1Center}
         {row1Right}
@@ -534,7 +538,33 @@ export const HeaderBar: React.FC<HeaderBarProps> = ({
       </div>
 
       {/* Row 2: Contextual controls for active tab */}
-      {row2}
+      {ribbonRow2Expanded && (
+        <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar shrink-0 pb-1 relative">
+          {row2}
+          <button
+            onClick={toggleRibbonRow2}
+            className="icon-btn !p-1 shrink-0 ml-auto"
+            title="Thu gọn thanh công cụ"
+            aria-label="Thu gọn thanh công cụ"
+          >
+            <ChevronUp className="w-4 h-4" />
+          </button>
+        </div>
+      )}
+
+      {/* Collapse/expand control when Row 2 is collapsed */}
+      {!ribbonRow2Expanded && (
+        <div className="flex justify-end shrink-0">
+          <button
+            onClick={toggleRibbonRow2}
+            className="icon-btn !p-1 shrink-0"
+            title="Mở rộng thanh công cụ"
+            aria-label="Mở rộng thanh công cụ"
+          >
+            <ChevronDown className="w-4 h-4" />
+          </button>
+        </div>
+      )}
     </header>
   );
 };
