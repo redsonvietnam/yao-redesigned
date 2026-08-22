@@ -525,18 +525,16 @@ export const HeaderBar: React.FC<HeaderBarProps> = ({
       className="h-11 w-full flex flex-col px-3 md:px-4 gap-1 sticky top-0 z-40 shrink-0"
       style={{ background: 'var(--chrome-surface)', borderBottom: '1px solid var(--chrome-border)' }}
     >
-      {/* Row 1: App identity + document controls + ribbon tabs */}
+      {/* Row 1: App identity + document controls + ribbon tabs + right actions */}
       <div className="flex items-center gap-2 overflow-x-auto no-scrollbar shrink-0">
         {row1Left}
         {row1Center}
         {row1Right}
+        {rightActions}
       </div>
 
       {/* Row 2: Contextual controls for active tab */}
       {row2}
-
-      {/* Right action buttons - preserved outside row structure */}
-      {rightActions}
     </header>
   );
 };
