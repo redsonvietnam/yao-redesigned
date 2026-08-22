@@ -2,13 +2,13 @@ import React, { useState } from 'react';
 import { useAppStore } from '../lib/store';
 import { X, FileText, Printer, Check, Download } from 'lucide-react';
 
-function escapeHtml(str: string): string {
+export function escapeHtml(str: string): string {
   return str
-    .replace(/&/g, "&")
-    .replace(/</g, "<")
-    .replace(/>/g, ">")
-    .replace(/"/g, '"')
-    .replace(/'/g, "'");
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
 }
 
 interface ExportModalProps {
