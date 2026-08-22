@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useAppStore } from '../lib/store';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db } from '../lib/db';
@@ -33,6 +33,8 @@ import {
   PanelLeft,
   ChevronUp,
   ChevronDown,
+  ChevronLeft,
+  ChevronRight,
 } from 'lucide-react';
 import { RibbonTab } from '../types';
 
@@ -111,6 +113,30 @@ export const HeaderBar: React.FC<HeaderBarProps> = ({
     window.addEventListener('click', close);
     return () => window.removeEventListener('click', close);
   }, [showDocMenu]);
+
+  // Tab overflow detection
+  const tabContainerRef = useRef<HTMLDivElement>(null);
+  const [showTabScrollLeft, setShowTabScrollLeft] = useState(false);
+  const [showTabScrollRight, setShowTabScrollRight] = useState(false);
+
+  useEffect(() => {
+    const container = tabContainerRef.current;
+    if (!container) return;
+
+    const checkOverflow = () => {
+      const { scrollLeft, scrollWidth, clientWidth } = container;
+      setShowTabScrollLeft(scrollLeft > 4);
+      setShowTabScrollRight(scrollLeft + clientWidth < scrollWidth - 4);
+    };
+
+    checkOverflow();
+    container.addEventListener('scroll', checkOverflow, { passive: true });
+    window.addEventListener('resize', checkOverflow);
+    return () => {
+      container.removeEventListener('scroll', checkOverflow);
+      window.removeEventListener('resize', checkOverflow);
+    };
+  }, []);
 
   const handleTitleSubmit = async () => {
     setIsEditingTitle(false);
@@ -248,8 +274,34 @@ export const HeaderBar: React.FC<HeaderBarProps> = ({
   );
 
   const row1Right = (
-    <div className="flex items-center shrink-0">
-      <div className="chrome-group overflow-x-auto max-w-full no-scrollbar">
+    <div className="flex items-center shrink-0 relative">
+      {/* Left scroll button */}
+      {showTabScrollLeft && (
+        <button
+          onClick={() => tabContainerRef.current?.scrollBy({ left: -160, behavior: 'smooth' })}
+          className="icon-btn !p-1 shrink-0 ml-1"
+          aria-label="Cuộn tab sang trái"
+          title="Cuộn tab sang trái"
+        >
+          <ChevronLeft className="w-4 h-4" />
+        </button>
+      )}
+
+      <div
+        ref={tabContainerRef}
+        className="chrome-group overflow-x-auto max-w-full no-scrollbar relative"
+        onScroll={() => {}}
+      >
+        {/* Right fade gradient when overflow */}
+        {showTabScrollRight && (
+          <div
+            className="absolute right-0 top-0 bottom-0 w-8 pointer-events-none"
+            style={{
+              background: 'linear-gradient(to right, transparent, var(--chrome-surface))',
+            }}
+            aria-hidden="true"
+          />
+        )}
         {tabs.map((tab) => (
           <button
             key={tab.id}
@@ -261,6 +313,18 @@ export const HeaderBar: React.FC<HeaderBarProps> = ({
           </button>
         ))}
       </div>
+
+      {/* Right scroll button */}
+      {showTabScrollRight && (
+        <button
+          onClick={() => tabContainerRef.current?.scrollBy({ left: 160, behavior: 'smooth' })}
+          className="icon-btn !p-1 shrink-0 mr-1"
+          aria-label="Cuộn tab sang phải"
+          title="Cuộn tab sang phải"
+        >
+          <ChevronRight className="w-4 h-4" />
+        </button>
+      )}
     </div>
   );
 
