@@ -5,7 +5,7 @@ import { MIN_ZOOM, MAX_ZOOM, ZOOM_STEP } from '../../lib/constants';
 import { PaperCell } from './PaperCell';
 import { CandidatePopup } from './CandidatePopup';
 import { PaperContextMenu } from './PaperContextMenu';
-import { PaperRuler } from './PaperRuler';
+import { HorizontalRuler, VerticalRuler } from './PaperRuler';
 import { PaperKeyboardHandler } from './PaperKeyboardHandler';
 
 export const PaperArea: React.FC = () => {
@@ -332,9 +332,10 @@ export const PaperArea: React.FC = () => {
       <div className="w-full h-full overflow-y-auto overflow-x-auto p-1 sm:p-3 flex flex-col items-center gap-4 scrollbar-thin">
         {Array.from({ length: pageCount }).map((_, pIdx) => (
           <div key={pIdx} className="relative group shrink-0">
-            {showRuler && <PaperRuler rows={dims.ROWS} cols={dims.COLS} />}
+            {showRuler && <HorizontalRuler cols={dims.COLS} />}
 
             <div className="flex relative">
+              {showRuler && <VerticalRuler rows={dims.ROWS} />}
               {/* Page Grid Canvas */}
               <div
                 className={`page ${mode} tf-${textFlow} ${showGrid ? 'grid-on' : ''} ${getThemeClass()} relative`}
