@@ -165,6 +165,21 @@ export const PaperArea: React.FC = () => {
         window.print();
         return;
       }
+      if (key === 'b') {
+        e.preventDefault();
+        toggleBold();
+        return;
+      }
+      if (key === 'i') {
+        e.preventDefault();
+        toggleItalic();
+        return;
+      }
+      if (key === 'u') {
+        e.preventDefault();
+        toggleUnderline();
+        return;
+      }
     }
 
     if (composing) {
@@ -261,7 +276,7 @@ export const PaperArea: React.FC = () => {
       insertChar(' ');
       return;
     }
-  }, [preedit, dims, textFlow, inputMode, selectedCellIndices, copySelectionText, cutSelectionText, selectAll, undo, redo, moveCandidate, commitCandidate, setPreedit, backspace, deleteSelection, moveCursor, insertChar]);
+  }, [preedit, dims, textFlow, inputMode, selectedCellIndices, copySelectionText, cutSelectionText, selectAll, undo, redo, moveCandidate, commitCandidate, setPreedit, backspace, deleteSelection, moveCursor, insertChar, toggleBold, toggleItalic, toggleUnderline]);
 
   const handlePaste = useCallback((e: React.ClipboardEvent<HTMLInputElement>) => {
     e.preventDefault();
