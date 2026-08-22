@@ -55,6 +55,7 @@ export const PaperArea: React.FC = () => {
 
   const hiddenInputRef = useRef<HTMLInputElement>(null);
   const paperWrapRef = useRef<HTMLDivElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   // Mouse Drag Selection State
   const [isDragging, setIsDragging] = useState(false);
@@ -121,6 +122,33 @@ export const PaperArea: React.FC = () => {
       });
     }
   }, [preedit, cursor, cells, mode, gridDensity]);
+
+  // Auto-scroll cursor into view
+  useEffect(() => {
+    const scrollContainer = scrollContainerRef.current;
+    if (!scrollContainer) return;
+
+    const cursorCell = paperWrapRef.current?.querySelector(
+      `.cell[data-idx="${cursor}"]`
+    );
+    if (!cursorCell) return;
+
+    const containerRect = scrollContainer.getBoundingClientRect();
+    const cellRect = cursorCell.getBoundingClientRect();
+
+    const isVisibleVertically =
+      cellRect.top >= containerRect.top && cellRect.bottom <= containerRect.bottom;
+    const isVisibleHorizontally =
+      cellRect.left >= containerRect.left && cellRect.right <= containerRect.right;
+
+    if (!isVisibleVertically || !isVisibleHorizontally) {
+      cursorCell.scrollIntoView({
+        behavior: 'auto',
+        block: 'nearest',
+        inline: 'nearest',
+      });
+    }
+  }, [cursor, cells, mode, gridDensity]);
 
   // Keyboard navigation & Shortcuts
   const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -344,7 +372,10 @@ export const PaperArea: React.FC = () => {
       className="paper-wrap desk-mat flex-1 border border-[#a68a5b]/30 rounded-2xl p-1 sm:p-2.5 relative flex flex-col items-center justify-start h-full min-h-0 overflow-hidden shadow-2xl transition-all select-none"
     >
       {/* Word Page Container - Maximized Height Viewport */}
-      <div className="w-full h-full overflow-y-auto overflow-x-auto p-1 sm:p-3 flex flex-col items-center gap-4 scrollbar-thin">
+      <div
+        ref={scrollContainerRef}
+        className="w-full h-full overflow-y-auto overflow-x-auto p-1 sm:p-3 flex flex-col items-center gap-4 scrollbar-thin"
+      >
         {Array.from({ length: pageCount }).map((_, pIdx) => (
           <div key={pIdx} className="relative group shrink-0">
             {showRuler && <HorizontalRuler cols={dims.COLS} />}
