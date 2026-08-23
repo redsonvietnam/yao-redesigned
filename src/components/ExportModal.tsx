@@ -17,7 +17,7 @@ interface ExportModalProps {
 }
 
 export const ExportModal: React.FC<ExportModalProps> = ({ isOpen, onClose }) => {
-  const { docTitle, cells } = useAppStore();
+  const { docTitle, cells, cellSize } = useAppStore();
   const [exportedMsg, setExportedMsg] = useState<string | null>(null);
 
   if (!isOpen) return null;
