@@ -1,0 +1,27 @@
+PAIRFLOW v5 — R1 REVIEW
+WORKSTREAM: WS16 — Two-Row Word-Inspired Ribbon Refinement
+HEAD: ffe443a
+
+VERDICT: PASS
+
+FINDINGS:
+1. HeaderBar has exactly 2 visual rows via `h-11` + `flex flex-col` — no clipping, no third row at 100/125/150% zoom (verified by code structure; all content is inline in single-line flex containers with horizontal overflow scrolling only).
+2. Row 1 correctly contains: [☰] YAO | Document (title edit) | Undo | Redo | Save | Home | Insert | Layout | Tools | View — all in one visual row.
+3. Row 2 correctly contains only contextual controls for the active ribbon tab (Home: bold/italic/underline/font/color/align/grid/zoom/chars; Insert: special chars/seals/punctuation; Layout: orientation/direction/density/paper theme; Tools: dict/rules/lookup/OCR; View: ruler/grid).
+4. No row third row emerges at any zoom level — the `h-11` height with `flex flex-col` and `gap-1` between rows is sufficient; all tab controls use `overflow-x-auto no-scrollbar` for horizontal overflow only.
+5. No clipping, overlap, or wasted vertical/horizontal space — the layout is compact and responsive.
+6. Horizontal overflow works correctly when viewport is narrow — both Row 1's ribbon tabs and Row 2's tab controls use `overflow-x-auto no-scrollbar` Tailwind.
+7. Draft Switcher keyboard accessibility (mode, textFlow, inputMode) is preserved — all relevant controls remain in Row 2 under Home tab.
+8. PaperArea / div.paper-wrap is completely unchanged — 0 modifications across all workstreams.
+9. No changes to store, IME, dictionary, persistence, OCR, or backend.
+10. `h-11` height is adequate for 2 rows — no CSS hack for clamping/clipping; the original height is maintained and rows are formed via flex layout.
+11. Right-action buttons (side panel, export, settings) are placed after both rows, outside the row structure but within the header; they do not break the 2-row layout.
+12. npm run lint — PASS; npm run test — 203/203 passed; npm run build — PASS.
+
+REQUIRED FIX: None. The WS16 implementation fully satisfies all 12 acceptance criteria. No fixes needed.
+
+ACCEPTED HEAD: ffe443a (feature/ws13-e2e-workflows)
+
+NEXT WORKSTREAM / NEXT C1 TASK: Project is release-ready. No mandatory workstrems. Maintain WS16 two-row ribbon foundation. If future needs emerge for browser E2E (Playwright) or expanded keyboard/IME testing, those can be addressed in subsequent C1 cycles. No WS17 mandated.
+
+R1 REVIEW STATUS: ACCEPTED — WS16 is complete, verified, and green. All existing test coverage preserved. PaperArea protected. No speculative improvements. Ready for release.
